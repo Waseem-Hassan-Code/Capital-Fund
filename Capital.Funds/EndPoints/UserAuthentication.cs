@@ -42,19 +42,19 @@ namespace Capital.Funds.EndPoints
             var login =await _auth.Login(model);
             if (login.Token == SD.UserNotFound) {
                 responseDto.Results = login;
-               return Results.Ok(responseDto);
+               return Results.NotFound(responseDto);
             }
 
             if(login.Token == SD.IncorrectPassword) {
                 responseDto.Results = login;
-                return Results.Ok(responseDto);
+                return Results.Forbid();
             }
 
             if (login == null)
             {
                 responseDto.StatusCode = 500;
                 responseDto.Message = "Internal Server Error.";
-                return Results.Ok(responseDto);
+                return Results.BadRequest(responseDto);
             }
 
             responseDto.IsSuccess=true;
@@ -72,26 +72,26 @@ namespace Capital.Funds.EndPoints
             if(Register == SD.AlreadyRegistered)
             {
                 responseDto.Message = SD.AlreadyRegistered;
-                return Results.Ok(responseDto);
+                return Results.BadRequest(responseDto);
             }
 
             if(Register == SD.RegistrationFailed)
             {
                 responseDto.Message = SD.RegistrationFailed;
-                return Results.Ok(responseDto);
+                return Results.BadRequest(responseDto);
             }
 
             if (Register == null)
             {
                 responseDto.StatusCode = 500;
                 responseDto.Message = "Internal Server Error.";
-                return Results.Ok(responseDto);
+                return Results.BadRequest(responseDto);
             }
 
             if(Register ==SD.InvalidEmailAddress)
             {
                 responseDto.Message = SD.InvalidEmailAddress;
-                return Results.Ok(responseDto);
+                return Results.BadRequest(responseDto);
             }
 
             responseDto.IsSuccess=true;
@@ -109,20 +109,20 @@ namespace Capital.Funds.EndPoints
             if (verify == SD.InvalidEmailAddress)
             {
                 responseDto.Message = SD.InvalidEmailAddress;
-                return Results.Ok(responseDto);
+                return Results.BadRequest(responseDto);
             }
 
             if (verify == SD.Unverified)
             {
                 responseDto.Message = SD.Unverified;
-                return Results.Ok(responseDto);
+                return Results.BadRequest(responseDto);
             }
 
             if (verify == null)
             {
                 responseDto.StatusCode = 500;
                 responseDto.Message = "Internal Server Error.";
-                return Results.Ok(responseDto);
+                return Results.BadRequest(responseDto);
             }
 
             responseDto.IsSuccess=true;
@@ -140,26 +140,26 @@ namespace Capital.Funds.EndPoints
             if (verify == SD.IncorrectOtp)
             {
                 responseDto.Message = SD.IncorrectOtp;
-                return Results.Ok(responseDto);
+                return Results.BadRequest(responseDto);
             }
 
             if (verify == SD.InvalidEmailAddress)
             {
                 responseDto.Message = SD.InvalidEmailAddress;
-                return Results.Ok(responseDto);
+                return Results.BadRequest(responseDto);
             }
 
             if (verify == SD.Unverified)
             {
                 responseDto.Message = SD.Unverified;
-                return Results.Ok(responseDto);
+                return Results.BadRequest(responseDto);
             }
 
             if (verify == null)
             {
                 responseDto.StatusCode = 500;
                 responseDto.Message = "Internal Server Error.";
-                return Results.Ok(responseDto);
+                return Results.BadRequest(responseDto);
             }
 
             responseDto.IsSuccess=true;

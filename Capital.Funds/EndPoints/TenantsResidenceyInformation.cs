@@ -39,14 +39,14 @@ namespace Capital.Funds.EndPoints
             {
                 responseDto.StatusCode = 400;
                 responseDto.Message = SD.RecordNotUpdated;
-                return Results.Ok(responseDto);
+                return Results.BadRequest(responseDto);
             }
 
             if (newTenant == null)
             {
                 responseDto.StatusCode = 500;
                 responseDto.Message = "Internal Server Error.";
-                return Results.Ok(responseDto);
+                return Results.BadRequest(responseDto);
             }
 
             responseDto.IsSuccess = true;
@@ -67,14 +67,14 @@ namespace Capital.Funds.EndPoints
             {
                 responseDto.StatusCode = 400;
                 responseDto.Message = SD.RecordNotUpdated;
-                return Results.Ok(responseDto);
+                return Results.BadRequest(responseDto);
             }
 
             if (record == null)
             {
                 responseDto.StatusCode = 500;
                 responseDto.Message = "Internal Server Error.";
-                return Results.Ok(responseDto);
+                return Results.BadRequest(responseDto);
             }
 
             responseDto.IsSuccess = true;
@@ -95,14 +95,14 @@ namespace Capital.Funds.EndPoints
             {
                 responseDto.StatusCode = 400;
                 responseDto.Message = "Data not found";
-                return Results.Ok(responseDto);
+                return Results.BadRequest(responseDto);
             }
 
             if (propertyList == null)
             {
                 responseDto.StatusCode = 500;
                 responseDto.Message = "Internal Server Error.";
-                return Results.Ok(responseDto);
+                return Results.BadRequest(responseDto);
             }
 
             responseDto.IsSuccess = true;
@@ -123,7 +123,7 @@ namespace Capital.Funds.EndPoints
             {
                 responseDto.StatusCode = 400;
                 responseDto.Message = SD.RecordNotUpdated;
-                return Results.Ok(responseDto);
+                return Results.BadRequest(responseDto);
             }
 
 
@@ -131,7 +131,7 @@ namespace Capital.Funds.EndPoints
             {
                 responseDto.StatusCode = 500;
                 responseDto.Message = "Internal Server Error.";
-                return Results.Ok(responseDto);
+                return Results.BadRequest(responseDto);
             }
 
             responseDto.IsSuccess = true;
@@ -151,14 +151,14 @@ namespace Capital.Funds.EndPoints
             if (property.PropertyId.IsNullOrEmpty() || property.UserId.IsNullOrEmpty())
             {
                 responseDto.Message = SD.UserNotFound;
-                return Results.Ok(responseDto);
+                return Results.BadRequest(responseDto);
             }
 
             if (property == null)
             {
                 responseDto.StatusCode = 500;
                 responseDto.Message = "Internal Server Error.";
-                return Results.Ok(responseDto);
+                return Results.BadRequest(responseDto);
             }
 
             responseDto.IsSuccess = true;

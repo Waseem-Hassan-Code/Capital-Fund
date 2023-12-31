@@ -34,14 +34,14 @@ namespace Capital.Funds.EndPoints
                 if (status == false)
                 {
                     responseDto.Message = SD.RecordNotUpdated;
-                    return Results.Ok(responseDto);
+                    return Results.BadRequest(responseDto);
                 }
 
                 if (status == null)
                 {
                     responseDto.StatusCode = 500;
                     responseDto.Message = "Internal Server Error.";
-                    return Results.Ok(responseDto);
+                    return Results.BadRequest(responseDto);
                 }
 
                 responseDto.IsSuccess = true;
@@ -60,14 +60,14 @@ namespace Capital.Funds.EndPoints
                 if (update == false)
                 {
                     responseDto.Message = SD.UserNotFound;
-                    return Results.Ok(responseDto);
+                    return Results.BadRequest(responseDto);
                 }
 
                 if (update == null)
                 {
                     responseDto.StatusCode = 500;
                     responseDto.Message = "Internal Server Error.";
-                    return Results.Ok(responseDto);
+                    return Results.BadRequest(responseDto);
                 }
 
                 responseDto.IsSuccess = true;
@@ -86,14 +86,14 @@ namespace Capital.Funds.EndPoints
                 if (complainsList.Items.IsNullOrEmpty())
                 {
                     responseDto.Message = "Data not found";
-                    return Results.Ok(responseDto);
+                    return Results.BadRequest(responseDto);
                 }
 
                 if (complainsList == null)
                 {
                     responseDto.StatusCode = 500;
                     responseDto.Message = "Internal Server Error.";
-                    return Results.Ok(responseDto);
+                    return Results.BadRequest(responseDto);
                 }
 
                 responseDto.IsSuccess = true;

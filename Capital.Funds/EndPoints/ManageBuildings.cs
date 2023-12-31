@@ -66,14 +66,14 @@ namespace Capital.Funds.EndPoints
             if (newProperty == SD.RecordNotUpdated)
             {
                 responseDto.Message = SD.RecordNotUpdated;
-                return Results.Ok(responseDto);
+                return Results.BadRequest(responseDto);
             }
 
             if (newProperty == null)
             {
                 responseDto.StatusCode = 500;
                 responseDto.Message = "Internal Server Error.";
-                return Results.Ok(responseDto);
+                return Results.BadRequest(responseDto);
             }
 
             responseDto.IsSuccess = true;
@@ -93,13 +93,13 @@ namespace Capital.Funds.EndPoints
             if (update == SD.UserNotFound)
             {
                 responseDto.Message = SD.UserNotFound;
-                return Results.Ok(responseDto);
+                return Results.BadRequest(responseDto);
             }
 
             if (update == SD.RecordNotUpdated)
             {
                 responseDto.Message = SD.RegistrationFailed;
-                return Results.Ok(responseDto);
+                return Results.BadRequest(responseDto);
             }
 
             if (update == null)
@@ -126,20 +126,20 @@ namespace Capital.Funds.EndPoints
             if (delete == SD.UserNotFound)
             {
                 responseDto.Message = SD.UserNotFound;
-                return Results.Ok(responseDto);
+                return Results.BadRequest(responseDto);
             }
 
             if (delete == SD.RecordNotUpdated)
             {
                 responseDto.Message = SD.RecordNotUpdated;
-                return Results.Ok(responseDto);
+                return Results.BadRequest(responseDto);
             }
 
             if (delete == null)
             {
                 responseDto.StatusCode = 500;
                 responseDto.Message = "Internal Server Error.";
-                return Results.Ok(responseDto);
+                return Results.BadRequest(responseDto);
             }
 
             responseDto.IsSuccess = true;
@@ -159,14 +159,14 @@ namespace Capital.Funds.EndPoints
             if (property.PropertyName.IsNullOrEmpty() || property.Id.IsNullOrEmpty())
             {
                 responseDto.Message = SD.UserNotFound;
-                return Results.Ok(responseDto);
+                return Results.BadRequest(responseDto);
             }
 
             if (property == null)
             {
                 responseDto.StatusCode = 500;
                 responseDto.Message = "Internal Server Error.";
-                return Results.Ok(responseDto);
+                return Results.BadRequest(responseDto);
             }
 
             responseDto.IsSuccess = true;

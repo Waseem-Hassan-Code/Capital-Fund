@@ -35,20 +35,20 @@ namespace Capital.Funds.EndPoints
             if (Register == SD.AlreadyRegistered)
             {
                 responseDto.Message = SD.AlreadyRegistered;
-                return Results.Ok(responseDto);
+                return Results.BadRequest(responseDto);
             }
 
             if (Register == SD.RecordNotUpdated)
             {
                 responseDto.Message = SD.RegistrationFailed;
-                return Results.Ok(responseDto);
+                return Results.BadRequest(responseDto);
             }
 
             if (Register == null)
             {
                 responseDto.StatusCode = 500;
                 responseDto.Message = "Internal Server Error.";
-                return Results.Ok(responseDto);
+                return Results.BadRequest(responseDto);
             }
 
             responseDto.IsSuccess = true;
@@ -67,20 +67,20 @@ namespace Capital.Funds.EndPoints
             if (update == SD.UserNotFound)
             {
                 responseDto.Message = SD.UserNotFound;
-                return Results.Ok(responseDto);
+                return Results.BadRequest(responseDto);
             }
 
             if (update == SD.RecordNotUpdated)
             {
                 responseDto.Message = SD.RegistrationFailed;
-                return Results.Ok(responseDto);
+                return Results.BadRequest(responseDto);
             }
 
             if (update == null)
             {
                 responseDto.StatusCode = 500;
                 responseDto.Message = "Internal Server Error.";
-                return Results.Ok(responseDto);
+                return Results.BadRequest(responseDto);
             }
 
             responseDto.IsSuccess = true;
@@ -99,14 +99,14 @@ namespace Capital.Funds.EndPoints
             if (tenantsList.Items.IsNullOrEmpty())
             {
                 responseDto.Message = "Data not found";
-                return Results.Ok(responseDto);
+                return Results.BadRequest(responseDto);
             }
 
             if (tenantsList == null)
             {
                 responseDto.StatusCode = 500;
                 responseDto.Message = "Internal Server Error.";
-                return Results.Ok(responseDto);
+                return Results.BadRequest(responseDto);
             }
 
             responseDto.IsSuccess = true;
