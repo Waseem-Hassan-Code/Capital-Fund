@@ -44,10 +44,10 @@ namespace Capital.Funds.EndPoints
                 return Results.BadRequest(responseDto);
             }
 
-            if (Register == null)
+            if (!string.IsNullOrEmpty(_manage.LastException))
             {
                 responseDto.StatusCode = 500;
-                responseDto.Message = "Internal Server Error.";
+                responseDto.Message = "Internal Server Error: " + _manage.LastException;
                 return Results.BadRequest(responseDto);
             }
 
@@ -76,10 +76,10 @@ namespace Capital.Funds.EndPoints
                 return Results.BadRequest(responseDto);
             }
 
-            if (update == null)
+            if (!string.IsNullOrEmpty(_manage.LastException))
             {
                 responseDto.StatusCode = 500;
-                responseDto.Message = "Internal Server Error.";
+                responseDto.Message = "Internal Server Error: " + _manage.LastException;
                 return Results.BadRequest(responseDto);
             }
 
@@ -102,10 +102,10 @@ namespace Capital.Funds.EndPoints
                 return Results.BadRequest(responseDto);
             }
 
-            if (tenantsList == null)
+            if (!string.IsNullOrEmpty(_manage.LastException))
             {
                 responseDto.StatusCode = 500;
-                responseDto.Message = "Internal Server Error.";
+                responseDto.Message = "Internal Server Error: " + _manage.LastException;
                 return Results.BadRequest(responseDto);
             }
 

@@ -4,6 +4,7 @@ namespace Capital.Funds.Services.IServices
 {
     public interface ITenantPayments
     {
+        string LastException { get; }
         Task<Models.TenantPayments> addTenantPaymentAsync(Models.TenantPayments tenantPayments);
         Task<Models.TenantPayments> updateTenantPaymentAsyn(Models.TenantPayments tenantPayments);
         Task<string> deleteTenantPaymentAsync(string contractId);

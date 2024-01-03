@@ -17,6 +17,7 @@ namespace Capital.Funds.Models
         [JsonIgnore]
         public DateTime CreatedAt { get; set; } = DateTime.Now;
         [JsonIgnore]
-        public DateTime ModifiedAt { get; set; } =DateTime.Now;
+        public DateTime ModifiedAt { get; set; } = DateTime.Now;
+        public bool isPayable { get; set; } 
     }
 }

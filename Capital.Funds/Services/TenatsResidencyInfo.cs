@@ -12,18 +12,20 @@ namespace Capital.Funds.Services
     {
         private readonly ApplicationDb _db;
         private readonly IMapper _mapper;
+        public string LastException { get; private set; }
 
         public TenatsResidencyInfo(ApplicationDb db, IMapper mapper)
         {
             _db = db;
             _mapper = mapper;
+            LastException = null;
         }
         public async Task<TenatDetails> assignPropertyAsync(TenatDetails TenatDetails)
         {
             try
             {
+                LastException = null;
                 _mapper.Map(TenatDetails, TenatDetails);
-
                 
                 await _db.TenatDetails.AddAsync(TenatDetails);
                 int count = await _db.SaveChangesAsync();
@@ -35,14 +37,16 @@ namespace Capital.Funds.Services
             }
             catch (Exception ex)
             {
-                return null;
+                LastException = ex.Message;
             }
+            return null;
         }
 
         public async Task<string> deleteAssignedProperty(string contractId)
         {
             try
             {
+                LastException = null;
                 var search = await _db.TenatDetails.FirstOrDefaultAsync(t=>t.Id == contractId);
                 if (search != null)
                 {
@@ -56,14 +60,16 @@ namespace Capital.Funds.Services
             }
             catch(Exception ex)
             {
-                return null;
+                LastException=ex.Message;
             }
+            return null;
         }
 
         public async Task<PaginatedResult<TenatDetails>> getAllContracts(int page, int pageSize)
         {
             try
             {
+                LastException = null;
                 var tottalCount = await _db.TenatDetails.CountAsync();
                 var details = await _db.TenatDetails
                     .Skip((page - 1) * pageSize)
@@ -95,14 +101,16 @@ namespace Capital.Funds.Services
             }
             catch (Exception ex)
             {
-                return null;
+                LastException = ex.Message;
             }
+            return null;
         }
 
         public async Task<TenatDetails> getByIdAsync(string contractId)
         {
             try
             {
+                LastException = null;
                 var search = await _db.TenatDetails.FirstOrDefaultAsync(x => x.Id == contractId);
                 if (search != null)
                     return search;
@@ -112,14 +120,16 @@ namespace Capital.Funds.Services
             }
             catch (Exception ex)
             {
-                return null;
+                LastException = ex.Message;
             }
+            return null;
         }
 
         public async Task<TenatDetails> updateAssignedPropertyAsync(TenatDetails tenantPayments)
         {
             try
             {
+                LastException = null;
                 TenatDetails updateDetails = await _db.TenatDetails.FirstOrDefaultAsync(u => u.Id == tenantPayments.Id);
                 if (updateDetails != null)
                 {
@@ -133,8 +143,9 @@ namespace Capital.Funds.Services
             }
             catch (Exception ex)
             {
-                return null;
+                LastException = ex.Message;
             }
+            return null;
         }
     }
 }

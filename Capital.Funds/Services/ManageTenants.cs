@@ -4,9 +4,7 @@ using Capital.Funds.Models;
 using Capital.Funds.Models.DTO;
 using Capital.Funds.Services.IServices;
 using Capital.Funds.Utils;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Win32;
 
 namespace Capital.Funds.Services
 {
@@ -14,16 +12,19 @@ namespace Capital.Funds.Services
     {
         private readonly ApplicationDb _db;
         private readonly IMapper _mapper;
-        
+        public string LastException { get; private set; }
+
         public ManageTenants(ApplicationDb db , IMapper mapper) {
             _db = db; 
             _mapper = mapper;
+            LastException = null;
         }
 
         public async Task<string> addNewTenantAsync(Users user)
         {
             try
             {
+                LastException = null;
                 Users existingUser = await _db.Users.FirstOrDefaultAsync(u=>u.Email == user.Email.ToLower());
 
                 if (existingUser != null)
@@ -58,14 +59,16 @@ namespace Capital.Funds.Services
             }
             catch (Exception ex)
             {
-                return null;
+                LastException = ex.Message;
             }
+            return null;
         }
 
         public async Task<PaginatedResult<TenantPersonalInfo>> getAllTenantsAsync(int page , int pageSize)
         {
             try
             {
+                LastException = null;
                 var totalCount = await _db.Users.CountAsync();
                 var tenants = await _db.Users
                     .Skip((page - 1) * pageSize)
@@ -97,14 +100,16 @@ namespace Capital.Funds.Services
             }
             catch (Exception ex)
             {
-                return null;
+                LastException = ex.Message;
             }
+            return null;
         }
 
         public async Task<string> updateTenantsPersonalInfoAsync(TenantPersonalInfo personalInfo)
         {
             try
             {
+                LastException = null;
                 Users existingUser = await _db.Users.FindAsync(personalInfo.Id);
 
                 if (existingUser == null)
@@ -123,8 +128,9 @@ namespace Capital.Funds.Services
             }
             catch (Exception ex)
             {
-                return null;
+                LastException = $"{ex.Message}";
             }
+            return null;
         }
 
 

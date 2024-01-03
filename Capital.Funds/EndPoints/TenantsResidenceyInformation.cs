@@ -42,10 +42,10 @@ namespace Capital.Funds.EndPoints
                 return Results.BadRequest(responseDto);
             }
 
-            if (newTenant == null)
+            if (!string.IsNullOrEmpty(_info.LastException))
             {
                 responseDto.StatusCode = 500;
-                responseDto.Message = "Internal Server Error.";
+                responseDto.Message = "Internal Server Error: " + _info.LastException;
                 return Results.BadRequest(responseDto);
             }
 
@@ -70,10 +70,10 @@ namespace Capital.Funds.EndPoints
                 return Results.BadRequest(responseDto);
             }
 
-            if (record == null)
+            if (!string.IsNullOrEmpty(_info.LastException))
             {
                 responseDto.StatusCode = 500;
-                responseDto.Message = "Internal Server Error.";
+                responseDto.Message = "Internal Server Error: " + _info.LastException;
                 return Results.BadRequest(responseDto);
             }
 
@@ -86,11 +86,11 @@ namespace Capital.Funds.EndPoints
         }
 
         [Authorize(Policy = "AdminOnly")]
-        public async static Task<IResult> getAllContracts(ITenatsResidencyInfo _inf, [FromQuery] int page = 1, [FromQuery] int pageSize = 10)
+        public async static Task<IResult> getAllContracts(ITenatsResidencyInfo _info, [FromQuery] int page = 1, [FromQuery] int pageSize = 10)
         {
             ResponseDto responseDto = new() { IsSuccess = false, StatusCode = 400, Message = "", Results = { } };
 
-            PaginatedResult<TenatDetails> propertyList = await _inf.getAllContracts(page, pageSize);
+            PaginatedResult<TenatDetails> propertyList = await _info.getAllContracts(page, pageSize);
             if (propertyList==null)
             {
                 responseDto.StatusCode = 400;
@@ -98,10 +98,10 @@ namespace Capital.Funds.EndPoints
                 return Results.BadRequest(responseDto);
             }
 
-            if (propertyList == null)
+            if (!string.IsNullOrEmpty(_info.LastException))
             {
                 responseDto.StatusCode = 500;
-                responseDto.Message = "Internal Server Error.";
+                responseDto.Message = "Internal Server Error: " + _info.LastException;
                 return Results.BadRequest(responseDto);
             }
 
@@ -127,10 +127,10 @@ namespace Capital.Funds.EndPoints
             }
 
 
-            if (updateDetails == null)
+            if (!string.IsNullOrEmpty(_info.LastException))
             {
                 responseDto.StatusCode = 500;
-                responseDto.Message = "Internal Server Error.";
+                responseDto.Message = "Internal Server Error: " + _info.LastException;
                 return Results.BadRequest(responseDto);
             }
 
@@ -154,10 +154,10 @@ namespace Capital.Funds.EndPoints
                 return Results.BadRequest(responseDto);
             }
 
-            if (property == null)
+            if (!string.IsNullOrEmpty(_info.LastException))
             {
                 responseDto.StatusCode = 500;
-                responseDto.Message = "Internal Server Error.";
+                responseDto.Message = "Internal Server Error: " + _info.LastException;
                 return Results.BadRequest(responseDto);
             }
 

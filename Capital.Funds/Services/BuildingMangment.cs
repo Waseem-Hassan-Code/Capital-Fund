@@ -13,11 +13,13 @@ namespace Capital.Funds.Services
     {
         private readonly ApplicationDb _db;
         private readonly IMapper _mapper;
+        public string LastException { get; private set; }
 
         public BuildingMangment(ApplicationDb db, IMapper mapper)
         {
             _db = db;
             _mapper = mapper;
+            LastException = null;
         }
         public async Task<string> createPropertyAsync(PropertyDetails property)
         {
@@ -40,20 +42,25 @@ namespace Capital.Funds.Services
                 int count = await _db.SaveChangesAsync();
 
                 if (count > 0)
+                {
+                    LastException = null;
                     return SD.RecordUpdated;
+                }
                 else
                     return SD.RecordNotUpdated;
             }
             catch (Exception ex)
             {
-                return null;
+                LastException = ex.Message;
             }
+            return null;
         }
 
         public async Task<PaginatedResult<PropertyDetails>> getPropertyAsync(int page, int pageSize)
         {
             try
             {
+                LastException = null;
                 var totalCount =await _db.PropertyDetails.CountAsync();
                 var properties = await _db.PropertyDetails
                     .Skip(page-1)
@@ -84,29 +91,33 @@ namespace Capital.Funds.Services
             }
             catch(Exception ex)
             {
-                return null;
+                LastException = ex.Message;
             }
+            return null;
         }
 
         public async Task<PropertyDetails> getPropertyByIdAsync(string propertyId)
         {
             try
             {
+                LastException = null;
                 var obj = await _db.PropertyDetails.FirstOrDefaultAsync(p => p.Id == propertyId);
                 if (obj == null)
                     return new PropertyDetails();
                 return obj;
 
             }
-            catch {
-                return null;
+            catch(Exception ex) {
+                LastException = ex.Message;
             }
+            return null;
         }
 
         public async Task<string> removePropertyAsync(string propertyId)
         {
             try
             {
+                LastException = null;
                 var obj = await _db.PropertyDetails.FirstOrDefaultAsync(p => p.Id == propertyId);
                 if (obj == null)
                     return SD.UserNotFound;
@@ -117,21 +128,20 @@ namespace Capital.Funds.Services
                if (rows > 0)
                     return SD.RecordUpdated;
                 
-
                 return SD.RecordNotUpdated;
-                   
             }
             catch(Exception ex)
             {
-                return null;
+                LastException= ex.Message;
             }
-
+            return null;
         }
 
         public async Task<string> updatePropertyAsync(PropertyDetails property)
         {
             try
             {
+                LastException = null;
                 var existingProperty = await _db.PropertyDetails.FindAsync(property.Id);
 
                 if (existingProperty == null)
@@ -157,8 +167,9 @@ namespace Capital.Funds.Services
             }
             catch (Exception ex)
             {
-                return null;
+                LastException = ex.Message;
             }
+            return null;
         }
 
 

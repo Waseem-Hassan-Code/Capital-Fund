@@ -4,6 +4,7 @@ namespace Capital.Funds.Services.IServices
 {
     public interface ITenatsResidencyInfo
     {
+        string LastException { get; }
         Task<TenatDetails> assignPropertyAsync(TenatDetails tenantDetails);
         Task<TenatDetails> updateAssignedPropertyAsync(TenatDetails tenantPayments);
         Task<string> deleteAssignedProperty(string contractId);

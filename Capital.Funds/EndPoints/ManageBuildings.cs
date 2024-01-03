@@ -42,11 +42,11 @@ namespace Capital.Funds.EndPoints
                 return Results.Ok(responseDto);
             }
 
-            if (propertyList == null)
+            if (!string.IsNullOrEmpty(_manage.LastException))
             {
                 responseDto.StatusCode = 500;
-                responseDto.Message = "Internal Server Error.";
-                return Results.Ok(responseDto);
+                responseDto.Message = "Internal Server Error: " + _manage.LastException;
+                return Results.BadRequest(responseDto);
             }
 
             responseDto.IsSuccess = true;
@@ -69,10 +69,10 @@ namespace Capital.Funds.EndPoints
                 return Results.BadRequest(responseDto);
             }
 
-            if (newProperty == null)
+            if (!string.IsNullOrEmpty(_manage.LastException))
             {
                 responseDto.StatusCode = 500;
-                responseDto.Message = "Internal Server Error.";
+                responseDto.Message = "Internal Server Error: " + _manage.LastException;
                 return Results.BadRequest(responseDto);
             }
 
@@ -102,11 +102,11 @@ namespace Capital.Funds.EndPoints
                 return Results.BadRequest(responseDto);
             }
 
-            if (update == null)
+            if (!string.IsNullOrEmpty(_manage.LastException))
             {
                 responseDto.StatusCode = 500;
-                responseDto.Message = "Internal Server Error.";
-                return Results.Ok(responseDto);
+                responseDto.Message = "Internal Server Error: " + _manage.LastException;
+                return Results.BadRequest(responseDto);
             }
 
             responseDto.IsSuccess = true;
@@ -135,10 +135,10 @@ namespace Capital.Funds.EndPoints
                 return Results.BadRequest(responseDto);
             }
 
-            if (delete == null)
+            if (!string.IsNullOrEmpty(_manage.LastException))
             {
                 responseDto.StatusCode = 500;
-                responseDto.Message = "Internal Server Error.";
+                responseDto.Message = "Internal Server Error: " + _manage.LastException;
                 return Results.BadRequest(responseDto);
             }
 
@@ -162,10 +162,10 @@ namespace Capital.Funds.EndPoints
                 return Results.BadRequest(responseDto);
             }
 
-            if (property == null)
+            if (!string.IsNullOrEmpty(_manage.LastException))
             {
                 responseDto.StatusCode = 500;
-                responseDto.Message = "Internal Server Error.";
+                responseDto.Message = "Internal Server Error: " + _manage.LastException;
                 return Results.BadRequest(responseDto);
             }
 

@@ -5,6 +5,7 @@ namespace Capital.Funds.Services.IServices
 {
     public interface IManageTenants
     {
+        string LastException { get; }
         Task<PaginatedResult<TenantPersonalInfo>> getAllTenantsAsync(int page, int pageSize);
         Task <string> updateTenantsPersonalInfoAsync(TenantPersonalInfo personalInfo);
         Task <string> addNewTenantAsync(Users user);

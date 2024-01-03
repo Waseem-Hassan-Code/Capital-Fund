@@ -28,6 +28,7 @@ builder.Services.AddScoped<IBuildingManagment,BuildingMangment>();
 builder.Services.AddScoped<ITenatsResidencyInfo, TenatsResidencyInfo>();
 builder.Services.AddScoped<ITenantPayments, TenantPayment>();
 builder.Services.AddScoped<ITenantsComplains, TenantsComplains>();
+builder.Services.AddScoped<IUserEssentials,UserEssentials>();
 builder.Services.AddAutoMapper(typeof(MappingConfig));
 
 builder.Services.AddEndpointsApiExplorer();
@@ -80,6 +81,11 @@ builder.Services.AddAuthorization(options =>
     {
         policy.RequireClaim("Role", "admin");
     });
+
+    options.AddPolicy("UserOnly", policy =>
+    {
+        policy.RequireClaim("Role", "user");
+    });
 });
 
 
@@ -99,6 +105,7 @@ app.ConfigureManageBuildingsEndPoints();
 app.ConfigureManageEmployeeEndPoints();
 app.ConfigureTenantsResidencyInfo();
 app.ConfigureTenantsPaymentsInfo();
+app.ConfigureUserEssentialsEndPoints();
 app.UseHttpsRedirection();
 
 

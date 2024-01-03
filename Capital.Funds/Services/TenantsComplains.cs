@@ -12,16 +12,19 @@ namespace Capital.Funds.Services
     {
         private readonly ApplicationDb _db;
         private readonly IMapper _mapper;
+        public string LastException { get; private set; }
 
         public TenantsComplains(ApplicationDb db, IMapper mapper)
         {
             _db = db;
             _mapper = mapper;
+            LastException = null;
         }
 
         public async Task<bool> RemoveComplainAsync(string complainId)
         {
             try{
+                LastException = null;
                 string sqlQuery = $"DELETE FROM TenantComplaints WHERE Id = @ComplainId";
                 int rowsAffected = await _db.Database.ExecuteSqlRawAsync(sqlQuery, new SqliteParameter("@ComplainId", complainId));
 
@@ -32,14 +35,16 @@ namespace Capital.Funds.Services
             }
             catch (Exception ex)
             {
-                return false;
+               LastException = ex.Message;
             }
+            return false;
         }
         public async Task<bool> ChangeStatusAsync(string complainId)
         {
             try
             {
-                string sqlQuery = $"UPDATE TenantComplaints SET IsFixed = 1 WHERE Id = @ComplainId";
+                LastException = null;
+                string sqlQuery = $"UPDATE TenantComplaints SET IsFixed = 1, SET UpdatedAt = GETDATE() WHERE Id = @ComplainId";
                 int rowsAffected = await _db.Database.ExecuteSqlRawAsync(sqlQuery, new SqliteParameter("@ComplainId", complainId));
 
                 if (rowsAffected == 0 )
@@ -49,14 +54,16 @@ namespace Capital.Funds.Services
             }
             catch (Exception ex)
             {
-                return false;
+                LastException=ex.Message;
             }
+            return false;
         }
 
         public async Task<PaginatedResult<TenantComplaints>> GetTenantsComplainsAsync(int page , int pageSize)
         {
             try
             {
+                LastException = null;
                 var tottalCount = await _db.TenantComplaints.CountAsync();
                 var details = await _db.TenatDetails
                     .Skip((page - 1) * pageSize)
@@ -88,8 +95,9 @@ namespace Capital.Funds.Services
             }
             catch (Exception ex)
             {
-                return null;
+                LastException = ex.Message;
             }
+            return null;
         }
 
     }

@@ -37,14 +37,14 @@ namespace Capital.Funds.EndPoints
                     return Results.BadRequest(responseDto);
                 }
 
-                if (status == null)
-                {
-                    responseDto.StatusCode = 500;
-                    responseDto.Message = "Internal Server Error.";
-                    return Results.BadRequest(responseDto);
-                }
+            if (!string.IsNullOrEmpty(_complains.LastException))
+            {
+                responseDto.StatusCode = 500;
+                responseDto.Message = "Internal Server Error: " + _complains.LastException;
+                return Results.BadRequest(responseDto);
+            }
 
-                responseDto.IsSuccess = true;
+            responseDto.IsSuccess = true;
                 responseDto.StatusCode = 200;
                 responseDto.Results = "";
                 responseDto.Message = SD.RegistrationSuccess;
@@ -63,14 +63,14 @@ namespace Capital.Funds.EndPoints
                     return Results.BadRequest(responseDto);
                 }
 
-                if (update == null)
-                {
-                    responseDto.StatusCode = 500;
-                    responseDto.Message = "Internal Server Error.";
-                    return Results.BadRequest(responseDto);
-                }
+            if (!string.IsNullOrEmpty(_complains.LastException))
+            {
+                responseDto.StatusCode = 500;
+                responseDto.Message = "Internal Server Error: " + _complains.LastException;
+                return Results.BadRequest(responseDto);
+            }
 
-                responseDto.IsSuccess = true;
+            responseDto.IsSuccess = true;
                 responseDto.StatusCode = 200;
                 responseDto.Results = update;
                 responseDto.Message = SD.RecordUpdated;
@@ -89,14 +89,14 @@ namespace Capital.Funds.EndPoints
                     return Results.BadRequest(responseDto);
                 }
 
-                if (complainsList == null)
-                {
-                    responseDto.StatusCode = 500;
-                    responseDto.Message = "Internal Server Error.";
-                    return Results.BadRequest(responseDto);
-                }
+            if (!string.IsNullOrEmpty(_complains.LastException))
+            {
+                responseDto.StatusCode = 500;
+                responseDto.Message = "Internal Server Error: " + _complains.LastException;
+                return Results.BadRequest(responseDto);
+            }
 
-                responseDto.IsSuccess = true;
+            responseDto.IsSuccess = true;
                 responseDto.StatusCode = 200;
                 responseDto.Results = complainsList;
                 responseDto.Message = "Record retrived successfully.";

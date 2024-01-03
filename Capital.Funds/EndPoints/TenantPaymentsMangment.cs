@@ -42,10 +42,10 @@ namespace Capital.Funds.EndPoints
                 return Results.BadRequest(responseDto);
             }
 
-            if (payment == null)
+            if (!string.IsNullOrEmpty(_pay.LastException))
             {
                 responseDto.StatusCode = 500;
-                responseDto.Message = "Internal Server Error.";
+                responseDto.Message = "Internal Server Error: " + _pay.LastException;
                 return Results.BadRequest(responseDto);
             }
 
@@ -70,10 +70,10 @@ namespace Capital.Funds.EndPoints
                 return Results.BadRequest(responseDto);
             }
 
-            if (record == null)
+            if (!string.IsNullOrEmpty(_pay.LastException))
             {
                 responseDto.StatusCode = 500;
-                responseDto.Message = "Internal Server Error.";
+                responseDto.Message = "Internal Server Error: " + _pay.LastException;
                 return Results.BadRequest(responseDto);
             }
 
@@ -98,10 +98,10 @@ namespace Capital.Funds.EndPoints
                 return Results.BadRequest(responseDto);
             }
 
-            if (paymentList == null)
+            if (!string.IsNullOrEmpty(_pay.LastException))
             {
                 responseDto.StatusCode = 500;
-                responseDto.Message = "Internal Server Error.";
+                responseDto.Message = "Internal Server Error: " + _pay.LastException;
                 return Results.BadRequest(responseDto);
             }
 
@@ -127,10 +127,10 @@ namespace Capital.Funds.EndPoints
             }
 
 
-            if (updateDetails == null)
+            if (!string.IsNullOrEmpty(_pay.LastException))
             {
                 responseDto.StatusCode = 500;
-                responseDto.Message = "Internal Server Error.";
+                responseDto.Message = "Internal Server Error: " + _pay.LastException;
                 return Results.BadRequest(responseDto);
             }
 
@@ -154,10 +154,10 @@ namespace Capital.Funds.EndPoints
                 return Results.BadRequest(responseDto);
             }
 
-            if (payment == null)
+            if (!string.IsNullOrEmpty(_pay.LastException))
             {
                 responseDto.StatusCode = 500;
-                responseDto.Message = "Internal Server Error.";
+                responseDto.Message = "Internal Server Error: " + _pay.LastException;
                 return Results.BadRequest(responseDto);
             }
 
