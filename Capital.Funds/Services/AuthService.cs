@@ -100,7 +100,7 @@ namespace Capital.Funds.Services
                     Email = register.Email.ToLower(),
                     Password = HashedPassword,
                     Salt = Salt,
-                    Gender = register.Gender,
+                    Gender = register.Gender.ToUpper(),
                     Role = SD.User,
                     IsActive = false,
                     OTP = email.Item2,
