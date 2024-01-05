@@ -13,7 +13,7 @@ namespace Capital.Funds.Models
 
         [JsonIgnore]
         public string Salt { get; set; }
-        public int Gender { get; set; }
+        public string Gender { get; set; }
         public string Role { get; set; } 
         public bool IsActive { get; set; }
         public string OTP { get; set; }

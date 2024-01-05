@@ -4,6 +4,6 @@ namespace Capital.Funds.Services.IServices
 {
     public interface IJwtTokenGenerator
     {
-        string GenerateToken(string name,string role, string id);
+        string GenerateToken(string name, string role, string id);
     }
 }

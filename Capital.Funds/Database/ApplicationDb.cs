@@ -26,7 +26,7 @@ namespace Capital.Funds.Database
                     Email = "admin@admin.com",
                     Password = HashedPassword,
                     Salt = Salt,
-                    Gender = 1,
+                    Gender = "Male",
                     Role = "admin",
                     OTP = "112233"
                 }
