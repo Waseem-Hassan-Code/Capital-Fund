@@ -28,7 +28,9 @@ namespace Capital.Funds.Database
                     Salt = Salt,
                     Gender = "Male",
                     Role = "admin",
-                    OTP = "112233"
+                    OTP = "112233",
+                    isEmailVerified = true,
+                    IsActive = true,
                 }
             ); 
 

@@ -57,6 +57,20 @@ namespace Capital.Funds.EndPoints
                 return Results.BadRequest(responseDto);
             }
 
+            if(login.Token == "Account inactive.")
+            {
+                responseDto.StatusCode = 401;
+                responseDto.Message = "Internal Server Error.";
+                return Results.Ok(responseDto);
+            }
+
+            if (login.Token == "Email not verified.")
+            {
+                responseDto.StatusCode = 402;
+                responseDto.Message = "Internal Server Error.";
+                return Results.Ok(responseDto);
+            }
+
             responseDto.IsSuccess=true;
             responseDto.StatusCode = 200;
             responseDto.Message = "User login success.";

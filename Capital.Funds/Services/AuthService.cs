@@ -41,6 +41,24 @@ namespace Capital.Funds.Services
 
                         string token = _token.GenerateToken(user.Name, user.Role, user.Id);
 
+                        if (user.isEmailVerified == false)
+                        {
+                            LoginResponseDto loginResponseDto = new LoginResponseDto()
+                            {
+                                User = userInfo,
+                                Token = "Email not verified.",
+                            };
+                        }
+
+                        if(user.IsActive == false)
+                        {
+                            LoginResponseDto loginResponseDto = new LoginResponseDto()
+                            {
+                                User = userInfo,
+                                Token = "Account inactive.",
+                            };
+                        }
+
                         LoginResponseDto response = new LoginResponseDto
                         {
                             User = userInfo,
