@@ -15,7 +15,7 @@ namespace Capital.Funds.Services
         {
             _jwtOptions = jwtOptions.Value;
         }
-        public string GenerateToken(string email, string role)
+        public string GenerateToken(string name, string role, string id)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
 
@@ -23,8 +23,9 @@ namespace Capital.Funds.Services
 
             var claimList = new List<Claim>
             {
-                new Claim("Email", email),
+                new Claim("Name", name),
                 new Claim("Role", role),
+                new Claim("Id", id)
             };
 
             var tokenDescriptor = new SecurityTokenDescriptor

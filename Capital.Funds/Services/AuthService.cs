@@ -39,7 +39,7 @@ namespace Capital.Funds.Services
                             Gender = user.Gender,
                         };
 
-                        string token = _token.GenerateToken(login.Email, user.Role);
+                        string token = _token.GenerateToken(user.Name, user.Role, user.Id);
 
                         LoginResponseDto response = new LoginResponseDto
                         {
