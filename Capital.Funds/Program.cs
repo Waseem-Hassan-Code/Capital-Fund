@@ -27,6 +27,7 @@ builder.Services.AddScoped<ITenantPayments, TenantPayment>();
 builder.Services.AddScoped<ITenantsComplains, TenantsComplains>();
 builder.Services.AddScoped<IUserEssentials,UserEssentials>();
 builder.Services.AddAutoMapper(typeof(MappingConfig));
+builder.Services.AddScoped<IDropDownLists, DropDownLists>();
 
 builder.Services.AddEndpointsApiExplorer();
 
@@ -100,7 +101,7 @@ app.ConfigureTenantsResidencyInfo();
 app.ConfigureTenantsPaymentsInfo();
 app.ConfigureUserEssentialsEndPoints();
 app.ConfigureComplainsEndPoints();
-//app.ConfigureDropDownsEndPoints();
+app.ConfigureDropDownsEndPoints();
 app.UseHttpsRedirection();
 
 
