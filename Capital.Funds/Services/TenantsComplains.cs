@@ -113,32 +113,5 @@ namespace Capital.Funds.Services
             }
             return null;
         }
-
-        public async Task<IEnumerable<DDLTenantName>> DDLTenantNames()
-        {
-            try
-            {
-                LastException = null;
-                var list  = await (
-                    from Tenant in _db.TenatDetails 
-                    join User in _db.Users on Tenant.UserId equals User.Id
-                    select new 
-                    { TenantId = Tenant.Id,
-                      TenantName = User.Name}
-                    ).ToListAsync();
-
-                if (list!=null)
-                {
-                    IEnumerable<DDLTenantName> names = _mapper.Map<IEnumerable<DDLTenantName>>(list);
-                    return names;
-                }
-            }
-            catch (Exception ex)
-            {
-                LastException = ex.Message;
-            }
-            IEnumerable<DDLTenantName> emptyList = new List<DDLTenantName>();
-            return emptyList;
-        }
     }
 }

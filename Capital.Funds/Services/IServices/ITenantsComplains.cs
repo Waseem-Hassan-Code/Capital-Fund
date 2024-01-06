@@ -7,7 +7,6 @@ namespace Capital.Funds.Services.IServices
     {
         string LastException { get; }
         Task<PaginatedResult<ComplaintsDTO>> GetTenantsComplainsAsync(int page, int pageSize);
-        Task<IEnumerable<DDLTenantName>> DDLTenantNames();
         Task<bool> ChangeStatusAsync(string complainId);
         Task<bool> RemoveComplainAsync(string complainId);
     }

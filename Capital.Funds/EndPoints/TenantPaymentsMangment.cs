@@ -13,16 +13,16 @@ namespace Capital.Funds.EndPoints
 
         public static void ConfigureTenantsPaymentsInfo(this WebApplication app)
         {
-            app.MapGet("/api/addNewPayment", addTenantPayment).WithName("AddNewPayment")
+            app.MapPost("/api/addNewPayment", addTenantPayment).WithName("AddNewPayment")
             .Produces<ResponseDto>(200).Produces(400);
 
             app.MapGet("/api/deletePayment", deletePayment).WithName("DeletePayment").Accepts<string>("application/json")
             .Produces<ResponseDto>(200).Produces(400);
 
-            app.MapPost("/api/getAllPayments", getAllPayment).WithName("GetAllPayments")
+            app.MapGet("/api/getAllPayments", getAllPayment).WithName("GetAllPayments")
             .Produces<ResponseDto>(200).Produces(400);
 
-            app.MapGet("/api/updatePayments", updatePayment).WithName("UpdatePayments")
+            app.MapPost("/api/updatePayments", updatePayment).WithName("UpdatePayments")
             .Produces<ResponseDto>(200).Produces(400);
 
             app.MapGet("/api/getPaymentById", getPaymentById).WithName("GetPaymentById")
