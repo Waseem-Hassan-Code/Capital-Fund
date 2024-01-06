@@ -125,5 +125,25 @@ namespace Capital.Funds.Services
             }
             return null;
         }
+
+        public async Task<string> getTenantIdAsync(string userId)
+        {
+            try{
+                LastException = null;
+
+                string tenantId = await _db.TenatDetails
+                                 .Where(u => u.Id == userId)
+                                 .Select(u => u.Id)
+                                 .FirstOrDefaultAsync();
+
+                if (tenantId != null)
+                    return tenantId;
+            }
+            catch (Exception ex)
+            {
+                LastException = ex.Message;
+            }
+            return null;
+        }
     }
 }
