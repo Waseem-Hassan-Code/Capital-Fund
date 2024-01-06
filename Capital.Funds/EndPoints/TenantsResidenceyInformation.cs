@@ -90,7 +90,7 @@ namespace Capital.Funds.EndPoints
         {
             ResponseDto responseDto = new() { IsSuccess = false, StatusCode = 400, Message = "", Results = { } };
 
-            PaginatedResult<TenatDetails> propertyList = await _info.getAllContracts(page, pageSize);
+            PaginatedResult<TenantsResidencyInfoDto> propertyList = await _info.getAllContracts(page, pageSize);
             if (propertyList==null)
             {
                 responseDto.StatusCode = 400;

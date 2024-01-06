@@ -72,21 +72,34 @@ namespace Capital.Funds.Services
             return null;
         }
 
-        public async Task<PaginatedResult<TenatDetails>> getAllContracts(int page, int pageSize)
+        public async Task<PaginatedResult<TenantsResidencyInfoDto>> getAllContracts(int page, int pageSize)
         {
             try
             {
                 LastException = null;
                 var tottalCount = await _db.TenatDetails.CountAsync();
-                var details = await _db.TenatDetails
+
+                var details = await (
+                    from residence in _db.TenatDetails
+                    join user in _db.Users on residence.UserId equals user.Id
+                    join prop in _db.PropertyDetails on residence.PropertyId equals prop.Id
+                    select new
+                    {
+                        TenantId = residence.Id,
+                        UserName = user.Name,
+                        PropName = prop.PropertyName,
+                        MovedInDate = residence.MovedIn,
+                        MovedOutDate = residence.MovedOut,
+                    })
                     .Skip((page - 1) * pageSize)
                     .Take(pageSize)
                     .ToListAsync();
 
+
                 if (details!=null)
                 {
-                    IEnumerable<TenatDetails> tenantsList = _mapper.Map<IEnumerable<TenatDetails>>(details);
-                    var paginatedResults = new PaginatedResult<TenatDetails>
+                    IEnumerable<TenantsResidencyInfoDto> tenantsList = _mapper.Map<IEnumerable<TenantsResidencyInfoDto>>(details);
+                    var paginatedResults = new PaginatedResult<TenantsResidencyInfoDto>
                     {
                         Items = tenantsList,
                         TotalCount = tottalCount,
@@ -97,9 +110,9 @@ namespace Capital.Funds.Services
                     return paginatedResults;
                 }
 
-                return new PaginatedResult<TenatDetails>
+                return new PaginatedResult<TenantsResidencyInfoDto>
                 {
-                    Items = Enumerable.Empty<TenatDetails>(),
+                    Items = Enumerable.Empty<TenantsResidencyInfoDto>(),
                     TotalCount = 0,
                     Page = page,
                     PageSize = pageSize

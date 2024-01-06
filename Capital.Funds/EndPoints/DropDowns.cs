@@ -10,19 +10,18 @@ namespace Capital.Funds.EndPoints
     {
         public static void ConfigureDropDownsEndPoints(this WebApplication app)
         {
+            app.MapGet("/api/dropDownTenantName", GetDropdownTenantNameAsync)
+                .WithName("DropDownListTenantName").Produces<ResponseDto>(200).Produces(400);
 
-            app.MapGet("/api/dropDownTenantName", DropDownTenantName).WithName("DropDownTenantName")
-             .Produces<ResponseDto>(200).Produces(400);
+            app.MapGet("/api/dropDownUserName", GetDropdownUserNameAsync)
+                .WithName("DropDownListUserName").Produces<ResponseDto>(200).Produces(400);
 
-            app.MapGet("/api/dropDownUserName", DropDownUserName).WithName("DropDownUserName")
-             .Produces<ResponseDto>(200).Produces(400);
-
-            app.MapGet("/api/dropDownPropertyName", DropDownPropertyName).WithName("DropDownPropertyName")
-             .Produces<ResponseDto>(200).Produces(400);
+            app.MapGet("/api/dropDownPropertyName", GetDropdownPropertyNameAsync)
+                .WithName("DropDownListPropertyName").Produces<ResponseDto>(200).Produces(400);
         }
 
         [Authorize(Policy = "AdminOnly")]
-        public async static Task<IResult> DropDownTenantName(IDropDownLists _ddl)
+        public async static Task<IResult> GetDropdownTenantNameAsync(IDropDownLists _ddl)
         {
             ResponseDto responseDto = new() { IsSuccess = false, StatusCode = 400, Message = "", Results = { } };
 
@@ -48,7 +47,7 @@ namespace Capital.Funds.EndPoints
         }
 
         [Authorize(Policy = "AdminOnly")]
-        public async static Task<IResult> DropDownUserName(IDropDownLists _ddl)
+        public async static Task<IResult> GetDropdownUserNameAsync(IDropDownLists _ddl)
         {
             ResponseDto responseDto = new() { IsSuccess = false, StatusCode = 400, Message = "", Results = { } };
 
@@ -74,7 +73,7 @@ namespace Capital.Funds.EndPoints
         }
 
         [Authorize(Policy = "AdminOnly")]
-        public async static Task<IResult> DropDownPropertyName(IDropDownLists _ddl)
+        public async static Task<IResult> GetDropdownPropertyNameAsync(IDropDownLists _ddl)
         {
             ResponseDto responseDto = new() { IsSuccess = false, StatusCode = 400, Message = "", Results = { } };
 

@@ -13,7 +13,7 @@ namespace Capital.Funds.EndPoints
         public static void ConfigureComplainsEndPoints(this WebApplication app)
         {
 
-            app.MapPost("/api/removeComplain", RemoveComplain).WithName("RemoveTenantComplain").Accepts<TenantComplaints>("application/json")
+            app.MapGet("/api/removeComplain", RemoveComplain).WithName("RemoveTenantComplain").Accepts<TenantComplaints>("application/json")
             .Produces<ResponseDto>(200).Produces(400);
 
             app.MapPost("/api/updateComplain", updateComplain).WithName("UpdateTenantComplain").Accepts<Users>("application/json")

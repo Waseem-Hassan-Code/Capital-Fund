@@ -100,7 +100,7 @@ app.ConfigureTenantsResidencyInfo();
 app.ConfigureTenantsPaymentsInfo();
 app.ConfigureUserEssentialsEndPoints();
 app.ConfigureComplainsEndPoints();
-app.ConfigureDropDownsEndPoints();
+//app.ConfigureDropDownsEndPoints();
 app.UseHttpsRedirection();
 
 
