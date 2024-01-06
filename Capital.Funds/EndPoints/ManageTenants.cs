@@ -13,7 +13,7 @@ namespace Capital.Funds.EndPoints
         public static void ConfigureManageEmployeeEndPoints(this WebApplication app)
         {
 
-            app.MapPost("/api/updateTenantInfo", updateTenantsInfo).WithName("UpdateTenant").Accepts<TenantPersonalInfo>("application/json")
+            app.MapPost("/api/updateTenantInfo", updateTenantsInfo).WithName("UpdateTenant").Accepts<TenantPersonalInfoDto>("application/json")
             .Produces<ResponseDto>(200).Produces(400);
 
             app.MapPost("/api/addNewTenant", AddUser).WithName("AddTenant").Accepts<Users>("application/json")
@@ -59,7 +59,7 @@ namespace Capital.Funds.EndPoints
         }
 
         [Authorize(Policy = "AdminOnly")]
-        public async static Task<IResult> updateTenantsInfo(IManageTenants _manage, [FromBody] TenantPersonalInfo personalInfo)
+        public async static Task<IResult> updateTenantsInfo(IManageTenants _manage, [FromBody] TenantPersonalInfoDto personalInfo)
         {
             ResponseDto responseDto = new() { IsSuccess = false, StatusCode = 400, Message = "", Results = { } };
 
@@ -95,7 +95,7 @@ namespace Capital.Funds.EndPoints
         {
             ResponseDto responseDto = new() { IsSuccess = false, StatusCode = 400, Message = "", Results = { } };
 
-            PaginatedResult<TenantPersonalInfo> tenantsList = await _manage.getAllTenantsAsync(page,pageSize);
+            PaginatedResult<TenantPersonalInfoDto> tenantsList = await _manage.getAllTenantsAsync(page,pageSize);
             if (tenantsList.Items.IsNullOrEmpty())
             {
                 responseDto.Message = "Data not found";

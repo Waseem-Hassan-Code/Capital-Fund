@@ -5,6 +5,7 @@ using Capital.Funds.Models.DTO;
 using Capital.Funds.Services.IServices;
 using Capital.Funds.Utils;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Win32;
 
 namespace Capital.Funds.Services
 {
@@ -64,7 +65,7 @@ namespace Capital.Funds.Services
             return null;
         }
 
-        public async Task<PaginatedResult<TenantPersonalInfo>> getAllTenantsAsync(int page , int pageSize)
+        public async Task<PaginatedResult<TenantPersonalInfoDto>> getAllTenantsAsync(int page , int pageSize)
         {
             try
             {
@@ -77,9 +78,9 @@ namespace Capital.Funds.Services
 
                 if (tenants.Any())
                 {
-                    IEnumerable<TenantPersonalInfo> tenantsList = _mapper.Map<IEnumerable<TenantPersonalInfo>>(tenants);
+                    IEnumerable<TenantPersonalInfoDto> tenantsList = _mapper.Map<IEnumerable<TenantPersonalInfoDto>>(tenants);
 
-                    var paginatedResult = new PaginatedResult<TenantPersonalInfo>
+                    var paginatedResult = new PaginatedResult<TenantPersonalInfoDto>
                     {
                         Items = tenantsList,
                         TotalCount = totalCount,
@@ -90,9 +91,9 @@ namespace Capital.Funds.Services
                     return paginatedResult;
                 }
 
-                return new PaginatedResult<TenantPersonalInfo>
+                return new PaginatedResult<TenantPersonalInfoDto>
                 {
-                    Items = Enumerable.Empty<TenantPersonalInfo>(),
+                    Items = Enumerable.Empty<TenantPersonalInfoDto>(),
                     TotalCount = 0,
                     Page = page,
                     PageSize = pageSize
@@ -105,7 +106,7 @@ namespace Capital.Funds.Services
             return null;
         }
 
-        public async Task<string> updateTenantsPersonalInfoAsync(TenantPersonalInfo personalInfo)
+        public async Task<string> updateTenantsPersonalInfoAsync(TenantPersonalInfoDto personalInfo)
         {
             try
             {
@@ -117,14 +118,26 @@ namespace Capital.Funds.Services
                     return SD.UserNotFound;
                 }
 
-                _mapper.Map(personalInfo, existingUser);
+                existingUser.Name = personalInfo.Name;
+                existingUser.Email = personalInfo.Email;
+                existingUser.Gender = personalInfo.Gender;
+                existingUser.Role = personalInfo.Role;
+                existingUser.IsActive = personalInfo.IsActive;
+                existingUser.isEmailVerified = personalInfo.isEmailVerified;
+
+                if (!string.IsNullOrEmpty(personalInfo.Password))
+                {
+                    string newSalt = SD.GenerateSalt();
+                    existingUser.Salt = newSalt;
+                    existingUser.Password = SD.HashPassword(personalInfo.Password, newSalt);
+                }
+
                 int rows = await _db.SaveChangesAsync();
 
                 if (rows > 0)
                     return SD.RecordUpdated;
                 else
                     return SD.RecordNotUpdated;
-
             }
             catch (Exception ex)
             {
@@ -132,6 +145,7 @@ namespace Capital.Funds.Services
             }
             return null;
         }
+
 
 
     }

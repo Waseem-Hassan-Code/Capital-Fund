@@ -6,8 +6,8 @@ namespace Capital.Funds.Services.IServices
     public interface IManageTenants
     {
         string LastException { get; }
-        Task<PaginatedResult<TenantPersonalInfo>> getAllTenantsAsync(int page, int pageSize);
-        Task <string> updateTenantsPersonalInfoAsync(TenantPersonalInfo personalInfo);
+        Task<PaginatedResult<TenantPersonalInfoDto>> getAllTenantsAsync(int page, int pageSize);
+        Task <string> updateTenantsPersonalInfoAsync(TenantPersonalInfoDto personalInfo);
         Task <string> addNewTenantAsync(Users user);
     }
 }
