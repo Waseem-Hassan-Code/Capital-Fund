@@ -16,10 +16,10 @@ namespace Capital.Funds.EndPoints
             app.MapGet("/api/getAllProperties", getAllProperties).WithName("GetAllProperties")
             .Produces<ResponseDto>(200).Produces(400);
 
-            app.MapPost("/api/addNewProperty", AddProperty).WithName("AddProperty").Accepts<PropertyDetails>("application/json")
+            app.MapPost("/api/addNewProperty", AddProperty).WithName("AddProperty")
             .Produces<ResponseDto>(200).Produces(400);
 
-            app.MapPost("/api/updateProperty", updateProperty).WithName("UpdateProperty").Accepts<PropertyDetails>("application/json")
+            app.MapPost("/api/updateProperty", updateProperty).WithName("UpdateProperty")
             .Produces<ResponseDto>(200).Produces(400);
 
             app.MapGet("/api/deleteProperty", deleteProperty).WithName("DeleteProperty")

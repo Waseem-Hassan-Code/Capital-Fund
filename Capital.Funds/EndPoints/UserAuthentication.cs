@@ -1,6 +1,7 @@
 ﻿using Capital.Funds.Models.DTO;
 using Capital.Funds.Services.IServices;
 using Capital.Funds.Utils;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Win32;
@@ -10,6 +11,7 @@ namespace Capital.Funds.EndPoints
 {
     public static class UserAuthentication
     {
+        
         public static void ConfigureAuthEndpoints(this WebApplication app)
         {
 
@@ -33,7 +35,7 @@ namespace Capital.Funds.EndPoints
 
         }
 
-
+        
         public static async Task<IResult> Login(IAuthService _auth,
            [FromBody] LoginDto model)
         {
@@ -78,6 +80,7 @@ namespace Capital.Funds.EndPoints
             return Results.Ok(responseDto);
           }
 
+        
         public async static Task<IResult> Register(IAuthService _auth,[FromBody] UserRegistrationDto registrationDto)
         {
             ResponseDto responseDto = new() { IsSuccess = false, StatusCode = 400, Message = "", Results = { } };
@@ -115,6 +118,7 @@ namespace Capital.Funds.EndPoints
             return Results.Ok(responseDto);
         }
 
+        
         public async static Task<IResult> ResendEmail(IAuthService _auth, [FromBody] string email)
          {
             ResponseDto responseDto = new() { IsSuccess = false, StatusCode = 400, Message = "", Results = { } };
@@ -146,6 +150,7 @@ namespace Capital.Funds.EndPoints
             return Results.Ok(responseDto);
         }
 
+        
         public async static Task<IResult> VerifyEmail(IAuthService _auth, [FromBody] EmailVerificationDto emailVerificationDto)
         {
             ResponseDto responseDto = new() { IsSuccess = false, StatusCode = 400, Message = "", Results = { } };

@@ -10,8 +10,8 @@ namespace Capital.Funds.Models
         public string PropertyName { get; set; }
         public string Address { get; set; }
         public string TypeofProperty { get; set; }
-        public string NumberofBedrooms { get; set; }
-        public string NumberofBathrooms { get; set; }
+        public int NumberofBedrooms { get; set; }
+        public int NumberofBathrooms { get; set; }
         public bool isAvailable { get; set; }
         public string Description { get; set; }
 

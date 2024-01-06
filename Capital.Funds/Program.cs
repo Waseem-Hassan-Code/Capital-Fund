@@ -12,9 +12,6 @@ using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
-
-
 builder.Services.AddDbContext<ApplicationDb>(options =>
 {
     options.UseSqlite($"Data source={AppDomain.CurrentDomain.BaseDirectory}{SD.DatabaseName}");
@@ -88,11 +85,7 @@ builder.Services.AddAuthorization(options =>
     });
 });
 
-
 var app = builder.Build();
-
-
-
 
 if (app.Environment.IsDevelopment())
 {
