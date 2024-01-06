@@ -25,9 +25,16 @@ namespace Capital.Funds.Services
             try
             {
                 LastException = null;
-                _mapper.Map(TenatDetails, TenatDetails);
-                
-                await _db.TenatDetails.AddAsync(TenatDetails);
+                TenatDetails newTenant = new TenatDetails
+                {
+                    Id = Guid.NewGuid().ToString("N"),
+                    UserId = TenatDetails.UserId,
+                    PropertyId = TenatDetails.PropertyId,
+                    MovedIn = TenatDetails.MovedIn,
+                    MovedOut = ""
+                };
+
+                await _db.TenatDetails.AddAsync(newTenant);
                 int count = await _db.SaveChangesAsync();
 
                 if (count > 0)

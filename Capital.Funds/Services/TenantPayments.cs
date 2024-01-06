@@ -27,7 +27,7 @@ namespace Capital.Funds.Services
                 LastException = null;
                 Models.TenantPayments payments = new Models.TenantPayments()
                 {
-                   Id = Guid.NewGuid().ToString(),
+                   Id = Guid.NewGuid().ToString("N"),
                    TenantId = tenantPayments.TenantId,
                    Rent = tenantPayments.Rent,
                    AreaMaintainienceFee = tenantPayments.AreaMaintainienceFee,
