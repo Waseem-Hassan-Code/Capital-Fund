@@ -2,7 +2,7 @@
 {
     public class ComplaintsDTO
     {
-        public int ComplaintId { get; set; }
+        public string ComplaintId { get; set; }
         public string TenantName { get; set; }
         public string ComplaintTitle { get; set; }
         public string ComplaintDetails { get; set; }

@@ -73,13 +73,13 @@ namespace Capital.Funds.Services
                     from complaint in _db.TenantComplaints
                     join tenant in _db.TenatDetails on complaint.TenantId equals tenant.Id
                     join User in _db.Users on tenant.UserId equals User.Id
-                       select new
-                            {
+                       select new ComplaintsDTO
+                       {
                               ComplaintId = complaint.Id,
                               TenantName = User.Name,
                               ComplaintTitle = complaint.Title,
                               ComplaintDetails = complaint.Details,
-                              isFixed = complaint.IsFixed,
+                              IsFixed = complaint.IsFixed,
                               ComplainDate = complaint.CreatedAt
                             })
                             .Skip((page - 1) * pageSize)
@@ -87,10 +87,10 @@ namespace Capital.Funds.Services
 
                 if (list!=null)
                 {
-                    IEnumerable<ComplaintsDTO> results = _mapper.Map<IEnumerable<ComplaintsDTO>>(list);
+                    //IEnumerable<ComplaintsDTO> results = _mapper.Map<IEnumerable<ComplaintsDTO>>(list);
                     var paginatedResults = new PaginatedResult<ComplaintsDTO>
                     {
-                        Items = results,
+                        Items = list,
                         TotalCount = tottalCount,
                         PageSize = pageSize,
                         Page = page
