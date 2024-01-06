@@ -70,12 +70,13 @@ namespace Capital.Funds.Services
             return null;
         }
 
-        public async Task<TenantPayments> getMontlyRentAsync(string tenantId)
+        public async Task<TenantPayments> getMontlyRentAsync(string userId)
         {
             try
             {
+                var tenant = await _db.TenatDetails.Where(u => u.UserId == userId).FirstOrDefaultAsync();
                 var payment = await _db.TenantPayments
-                   .Where(t => t.TenantId == tenantId && t.isPayable == true)
+                   .Where(t => t.TenantId == tenant.Id && t.isPayable == true)
                    .OrderByDescending(t => t.CreatedAt)
                    .FirstOrDefaultAsync();
 

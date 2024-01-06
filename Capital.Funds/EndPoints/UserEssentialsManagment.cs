@@ -28,11 +28,11 @@ namespace Capital.Funds.EndPoints
         }
 
         [Authorize(Policy = "UserOnly")]
-        public async static Task<IResult> getMonthlyRent(IUserEssentials _manage, [FromQuery] string tenantId)
+        public async static Task<IResult> getMonthlyRent(IUserEssentials _manage, [FromQuery] string userId)
         {
             ResponseDto responseDto = new() { IsSuccess = false, StatusCode = 400, Message = "", Results = { } };
 
-            var result = await _manage.getMontlyRentAsync(tenantId);
+            var result = await _manage.getMontlyRentAsync(userId);
             if (result==null)
             {
                 responseDto.StatusCode = 203;
