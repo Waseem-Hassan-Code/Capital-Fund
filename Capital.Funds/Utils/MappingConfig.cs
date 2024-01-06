@@ -13,6 +13,8 @@ namespace Capital.Funds.Utils
             CreateMap<PropertyDetails, PropertyDetails>();
             CreateMap<TenatDetails, TenatDetails>();
             CreateMap<TenantPayments, TenantPayments>();
+            CreateMap<ComplaintsDTO, ComplaintsDTO>();
+            CreateMap<DDLTenantName,DDLTenantName>();
             //CreateMap<Object,ObjDTO>;
         }
     }

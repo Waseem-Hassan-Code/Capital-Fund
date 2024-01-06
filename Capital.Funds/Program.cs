@@ -99,6 +99,8 @@ app.ConfigureManageEmployeeEndPoints();
 app.ConfigureTenantsResidencyInfo();
 app.ConfigureTenantsPaymentsInfo();
 app.ConfigureUserEssentialsEndPoints();
+app.ConfigureComplainsEndPoints();
+app.ConfigureDropDownsEndPoints();
 app.UseHttpsRedirection();
 
 

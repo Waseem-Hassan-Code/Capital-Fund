@@ -11,7 +11,6 @@ namespace Capital.Funds.Models
         public string Title { get; set; }
         public string Details { get; set; }
         public bool IsFixed { get; set; }
-        [JsonIgnore]
         public DateTime CreatedAt { get; set; }
         [JsonIgnore]
         public DateTime UpdatedAt { get; set;}

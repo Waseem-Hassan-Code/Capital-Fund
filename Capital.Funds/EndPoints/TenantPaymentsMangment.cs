@@ -19,7 +19,7 @@ namespace Capital.Funds.EndPoints
             app.MapGet("/api/deletePayment", deletePayment).WithName("DeletePayment").Accepts<string>("application/json")
             .Produces<ResponseDto>(200).Produces(400);
 
-            app.MapPost("/api/getAllPayments", getAllPayment).WithName("GetAllPayments").Accepts<TenatDetails>("application/json")
+            app.MapPost("/api/getAllPayments", getAllPayment).WithName("GetAllPayments")
             .Produces<ResponseDto>(200).Produces(400);
 
             app.MapGet("/api/updatePayments", updatePayment).WithName("UpdatePayments")

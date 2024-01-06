@@ -10,7 +10,7 @@ namespace Capital.Funds.EndPoints
 {
     public static class TenantsComplainsManagment
     {
-        public static void ConfigureManageComplainsEndPoints(this WebApplication app)
+        public static void ConfigureComplainsEndPoints(this WebApplication app)
         {
 
             app.MapPost("/api/removeComplain", RemoveComplain).WithName("RemoveTenantComplain").Accepts<TenantComplaints>("application/json")
@@ -82,7 +82,7 @@ namespace Capital.Funds.EndPoints
             {
                 ResponseDto responseDto = new() { IsSuccess = false, StatusCode = 400, Message = "", Results = { } };
 
-                PaginatedResult<TenantComplaints> complainsList = await _complains.GetTenantsComplainsAsync(page, pageSize);
+                PaginatedResult<ComplaintsDTO> complainsList = await _complains.GetTenantsComplainsAsync(page, pageSize);
                 if (complainsList.Items.IsNullOrEmpty())
                 {
                     responseDto.Message = "Data not found";
