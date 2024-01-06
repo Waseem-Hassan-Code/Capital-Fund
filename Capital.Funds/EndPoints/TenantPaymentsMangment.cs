@@ -93,7 +93,7 @@ namespace Capital.Funds.EndPoints
             PaginatedResult<TenantPayments> paymentList = await _pay.getAllTenatPaymentsAsync(page, pageSize);
             if (paymentList.TotalCount==0)
             {
-                responseDto.StatusCode = 203;
+                responseDto.StatusCode = 200;
                 responseDto.Message = "Data not found";
                 return Results.Ok(responseDto);
             }

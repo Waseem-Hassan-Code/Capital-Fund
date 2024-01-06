@@ -18,6 +18,7 @@ namespace Capital.Funds.Services
             _mapper = mapper;
             LastException = null;
         }
+
         public async Task<IEnumerable<DDLTenantName>> DDLTenantNames()
         {
             try
@@ -26,26 +27,22 @@ namespace Capital.Funds.Services
                 var list = await (
                     from Tenant in _db.TenatDetails
                     join User in _db.Users on Tenant.UserId equals User.Id
-                    select new
+                    select new DDLTenantName
                     {
-                        TenantId = Tenant.Id,
-                        TenantName = User.Name
+                        Id = Tenant.Id,
+                        Name = User.Name
                     }
-                    ).ToListAsync();
+                ).ToListAsync();
 
-                if (list!=null)
-                {
-                    IEnumerable<DDLTenantName> names = _mapper.Map<IEnumerable<DDLTenantName>>(list);
-                    return names;
-                }
+                return list;
             }
             catch (Exception ex)
             {
-                LastException = ex.Message;
+                LastException = $"{ex.Message}";
             }
-            IEnumerable<DDLTenantName> emptyList = new List<DDLTenantName>();
-            return emptyList;
+            return null;
         }
+
 
         public async Task<IEnumerable<DDLUserName>> DDLUserNames()
         {
@@ -54,17 +51,16 @@ namespace Capital.Funds.Services
                 LastException = null;
                 var list = await(
                     from User in _db.Users
-                    select new
+                    select new DDLUserName
                     {
-                        UserId = User.Id,
-                        UserName = User.Name
+                        ID = User.Id,
+                        Name = User.Name
                     }
                     ).ToListAsync();
 
                 if (list!=null)
                 {
-                    IEnumerable<DDLUserName> names = _mapper.Map<IEnumerable<DDLUserName>>(list);
-                    return names;
+                    return list;
                 }
             }
             catch (Exception ex)
@@ -82,17 +78,16 @@ namespace Capital.Funds.Services
                 LastException = null;
                 var list = await(
                     from prop in _db.PropertyDetails
-                    select new
+                    select new DDLPropertyName
                     {
-                        UserId = prop.Id,
-                        UserName = prop.PropertyName
+                        ID = prop.Id,
+                        Name = prop.PropertyName
                     }
                     ).ToListAsync();
 
                 if (list!=null)
                 {
-                    IEnumerable<DDLPropertyName> names = _mapper.Map<IEnumerable<DDLPropertyName>>(list);
-                    return names;
+                    return list;
                 }
             }
             catch (Exception ex)

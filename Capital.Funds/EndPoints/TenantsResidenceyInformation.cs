@@ -93,9 +93,9 @@ namespace Capital.Funds.EndPoints
             PaginatedResult<TenantsResidencyInfoDto> propertyList = await _info.getAllContracts(page, pageSize);
             if (propertyList==null)
             {
-                responseDto.StatusCode = 400;
+                responseDto.StatusCode = 200;
                 responseDto.Message = "Data not found";
-                return Results.BadRequest(responseDto);
+                return Results.Ok(responseDto);
             }
 
             if (!string.IsNullOrEmpty(_info.LastException))
