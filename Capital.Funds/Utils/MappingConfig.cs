@@ -8,8 +8,8 @@ namespace Capital.Funds.Utils
     {
         public MappingConfig() {
 
-            CreateMap<Users, TenantPersonalInfo>();
-            CreateMap<TenantPersonalInfo, Users>();
+            CreateMap<Users, TenantPersonalInfoDto>();
+            CreateMap<TenantPersonalInfoDto, Users>();
             CreateMap<PropertyDetails, PropertyDetails>();
             CreateMap<TenatDetails, TenatDetails>();
             CreateMap<TenantPayments, TenantPayments>();
