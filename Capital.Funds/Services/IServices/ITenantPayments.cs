@@ -1,4 +1,5 @@
 ﻿using Capital.Funds.Models;
+using Capital.Funds.Models.DTO;
 
 namespace Capital.Funds.Services.IServices
 {
@@ -8,7 +9,7 @@ namespace Capital.Funds.Services.IServices
         Task<Models.TenantPayments> addTenantPaymentAsync(Models.TenantPayments tenantPayments);
         Task<Models.TenantPayments> updateTenantPaymentAsyn(Models.TenantPayments tenantPayments);
         Task<string> deleteTenantPaymentAsync(string contractId);
-        Task<PaginatedResult<Models.TenantPayments>> getAllTenatPaymentsAsync(int page, int pageSize);
+        Task<PaginatedResult<TenantPaymentsDto>> getAllTenatPaymentsAsync(int page, int pageSize);
         Task<PaginatedResult<Models.TenantPayments>> getTenantPaymentByIdAsync(int page, int pageSize, string TenantId);
     }
 }

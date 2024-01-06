@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Capital.Funds.Database;
 using Capital.Funds.Models;
+using Capital.Funds.Models.DTO;
 using Capital.Funds.Services.IServices;
 using Capital.Funds.Utils;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -78,23 +79,39 @@ namespace Capital.Funds.Services
             return null;
         }
 
-        public async Task<PaginatedResult<Models.TenantPayments>> getAllTenatPaymentsAsync(int page, int pageSize)
+        public async Task<PaginatedResult<TenantPaymentsDto>> getAllTenatPaymentsAsync(int page, int pageSize)
         {
             try
             {
                 LastException = null;
                 var totalCount = await _db.TenantPayments.CountAsync();
-                var details = await _db.TenantPayments
-                    .Skip((page - 1) * pageSize)
-                    .Take(pageSize)
-                    .ToListAsync();
+
+                var details = await (
+    from payment in _db.TenantPayments
+    join tenant in _db.TenatDetails on payment.TenantId equals tenant.Id
+    join user in _db.Users on tenant.UserId equals user.Id
+    select new TenantPaymentsDto
+    {
+        Id = payment.Id,
+        TenantName = user.Name,
+        Rent = payment.Rent,
+        AreaMaintainienceFee = payment.AreaMaintainienceFee,
+        isLate = payment.isLate,
+        LateFee = payment.LateFee,
+        RentPayedAt = payment.RentPayedAt,
+        Month = payment.Month,
+        isPayable = payment.isPayable
+    })
+    .Skip((page - 1) * pageSize)
+    .Take(pageSize)
+    .ToListAsync();
 
                 if (details!=null)
                 {
-                    IEnumerable<Models.TenantPayments> paymentList = _mapper.Map<IEnumerable<Models.TenantPayments>>(details);
-                    var paginatedResults = new PaginatedResult<Models.TenantPayments>
+                    //IEnumerable<Models.TenantPayments> paymentList = _mapper.Map<IEnumerable<Models.TenantPayments>>(details);
+                    var paginatedResults = new PaginatedResult<TenantPaymentsDto>
                     {
-                        Items = paymentList,
+                        Items = details,
                         TotalCount = totalCount,
                         PageSize = pageSize,
                         Page = page
@@ -103,9 +120,9 @@ namespace Capital.Funds.Services
                     return paginatedResults;
                 }
 
-                return new PaginatedResult<Models.TenantPayments>
+                return new PaginatedResult<TenantPaymentsDto>
                 {
-                    Items = Enumerable.Empty<Models.TenantPayments>(),
+                    Items = Enumerable.Empty<TenantPaymentsDto>(),
                     TotalCount = 0,
                     Page = page,
                     PageSize = pageSize

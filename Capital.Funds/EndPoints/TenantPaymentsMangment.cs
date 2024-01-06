@@ -90,7 +90,7 @@ namespace Capital.Funds.EndPoints
         {
             ResponseDto responseDto = new() { IsSuccess = false, StatusCode = 400, Message = "", Results = { } };
 
-            PaginatedResult<TenantPayments> paymentList = await _pay.getAllTenatPaymentsAsync(page, pageSize);
+            PaginatedResult<TenantPaymentsDto> paymentList = await _pay.getAllTenatPaymentsAsync(page, pageSize);
             if (paymentList.TotalCount==0)
             {
                 responseDto.StatusCode = 200;
