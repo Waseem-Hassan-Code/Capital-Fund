@@ -183,26 +183,28 @@ namespace Capital.Funds.Services
             try
             {
                 LastException = null;
-                Models.TenantPayments payments = new Models.TenantPayments()
+
+                Models.TenantPayments existingPayment = await _db.TenantPayments.FindAsync(tenantPayments.Id);
+
+                if (existingPayment != null)
                 {
-                    Id = Guid.NewGuid().ToString(),
-                    TenantId = tenantPayments.TenantId,
-                    Rent = tenantPayments.Rent,
-                    AreaMaintainienceFee = tenantPayments.AreaMaintainienceFee,
-                    isLate = tenantPayments.isLate,
-                    LateFee = tenantPayments.LateFee,
-                    RentPayedAt = tenantPayments.RentPayedAt,
-                    Month = tenantPayments.Month,
-                    ModifiedAt = DateTime.Now,
-                    isPayable  = tenantPayments.isPayable,
-                };
+                    existingPayment.TenantId = tenantPayments.TenantId;
+                    existingPayment.Rent = tenantPayments.Rent;
+                    existingPayment.AreaMaintainienceFee = tenantPayments.AreaMaintainienceFee;
+                    existingPayment.isLate = tenantPayments.isLate;
+                    existingPayment.LateFee = tenantPayments.LateFee;
+                    existingPayment.RentPayedAt = tenantPayments.RentPayedAt;
+                    existingPayment.Month = tenantPayments.Month;
+                    existingPayment.ModifiedAt = DateTime.Now;
+                    existingPayment.isPayable = tenantPayments.isPayable;
 
-                int count = await _db.SaveChangesAsync();
+                    int count = await _db.SaveChangesAsync();
 
-                if (count > 0)
-                    return payments;
+                    if (count > 0)
+                        return tenantPayments;
 
-                return payments;
+                    return tenantPayments;
+                }
             }
             catch (Exception ex)
             {
