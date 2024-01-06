@@ -83,13 +83,13 @@ namespace Capital.Funds.Services
                     from residence in _db.TenatDetails
                     join user in _db.Users on residence.UserId equals user.Id
                     join prop in _db.PropertyDetails on residence.PropertyId equals prop.Id
-                    select new
+                    select new TenantsResidencyInfoDto
                     {
-                        TenantId = residence.Id,
+                        Id = residence.Id,
                         UserName = user.Name,
-                        PropName = prop.PropertyName,
-                        MovedInDate = residence.MovedIn,
-                        MovedOutDate = residence.MovedOut,
+                        PropertyName = prop.PropertyName,
+                        MovedIn = residence.MovedIn,
+                        MovedOut = residence.MovedOut,
                     })
                     .Skip((page - 1) * pageSize)
                     .Take(pageSize)
@@ -98,10 +98,10 @@ namespace Capital.Funds.Services
 
                 if (details!=null)
                 {
-                    IEnumerable<TenantsResidencyInfoDto> tenantsList = _mapper.Map<IEnumerable<TenantsResidencyInfoDto>>(details);
+                    //IEnumerable<TenantsResidencyInfoDto> tenantsList = _mapper.Map<IEnumerable<TenantsResidencyInfoDto>>(details);
                     var paginatedResults = new PaginatedResult<TenantsResidencyInfoDto>
                     {
-                        Items = tenantsList,
+                        Items = details,
                         TotalCount = tottalCount,
                         PageSize = pageSize,
                         Page = page
