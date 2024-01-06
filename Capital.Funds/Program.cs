@@ -28,7 +28,6 @@ builder.Services.AddScoped<ITenantsComplains, TenantsComplains>();
 builder.Services.AddScoped<IUserEssentials,UserEssentials>();
 builder.Services.AddAutoMapper(typeof(MappingConfig));
 builder.Services.AddScoped<IDropDownLists, DropDownLists>();
-
 builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddSwaggerGen(option =>
@@ -70,9 +69,7 @@ builder.Services.AddCors(options =>
         });
 });
 
-
 builder.AddAppAuthetication();
-
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("AdminOnly", policy =>
@@ -103,7 +100,5 @@ app.ConfigureUserEssentialsEndPoints();
 app.ConfigureComplainsEndPoints();
 app.ConfigureDropDownsEndPoints();
 app.UseHttpsRedirection();
-
-
 
 app.Run();
