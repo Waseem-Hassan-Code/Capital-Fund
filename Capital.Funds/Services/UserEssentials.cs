@@ -133,7 +133,7 @@ namespace Capital.Funds.Services
                 LastException = null;
 
                 string tenantId = await _db.TenatDetails
-                                 .Where(u => u.Id == userId)
+                                 .Where(u => u.UserId == userId)
                                  .Select(u => u.Id)
                                  .FirstOrDefaultAsync();
 
