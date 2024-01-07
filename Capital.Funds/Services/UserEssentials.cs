@@ -98,7 +98,8 @@ namespace Capital.Funds.Services
         {
             try
             {
-                var results = await _db.TenantPayments.Where(r=>r.TenantId == tenantId)
+                var tenant = await _db.TenatDetails.Where(u => u.UserId == tenantId).FirstOrDefaultAsync();
+                var results = await _db.TenantPayments.Where(r=>r.TenantId == tenant.Id)
                     .OrderByDescending(o=>o.RentPayedAt)
                     .Skip(page-1)
                     .Take(pageSize)
