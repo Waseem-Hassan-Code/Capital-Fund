@@ -51,8 +51,9 @@ namespace Capital.Funds.Services
         {
             try
             {
+                var tenant = await _db.TenatDetails.FirstOrDefaultAsync(t=>t.UserId == tenantId);
                 IEnumerable<TenantComplaints> complaints = await _db.TenantComplaints
-                    .Where(t => t.TenantId == tenantId)
+                    .Where(t => t.TenantId == tenant.Id)
                     .OrderByDescending(t => t.CreatedAt)
                     .ToListAsync();
 
