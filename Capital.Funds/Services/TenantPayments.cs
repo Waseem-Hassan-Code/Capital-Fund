@@ -28,17 +28,17 @@ namespace Capital.Funds.Services
                 LastException = null;
                 Models.TenantPayments payments = new Models.TenantPayments()
                 {
-                   Id = Guid.NewGuid().ToString("N"),
-                   TenantId = tenantPayments.TenantId,
-                   Rent = tenantPayments.Rent,
-                   AreaMaintainienceFee = tenantPayments.AreaMaintainienceFee,
-                   isLate = tenantPayments.isLate,
-                   LateFee = tenantPayments.LateFee,
-                   RentPayedAt = tenantPayments.RentPayedAt,
-                   Month = tenantPayments.Month,
-                   CreatedAt = DateTime.Now,
-                   ModifiedAt = DateTime.Now,
-                   isPayable = true,
+                    Id = Guid.NewGuid().ToString("N"),
+                    TenantId = tenantPayments.TenantId,
+                    Rent = tenantPayments.Rent,
+                    AreaMaintainienceFee = tenantPayments.AreaMaintainienceFee,
+                    isLate = tenantPayments.isLate,
+                    LateFee = tenantPayments.LateFee,
+                    RentPayedAt = tenantPayments.RentPayedAt,
+                    Month = tenantPayments.Month,
+                    CreatedAt = DateTime.Now,
+                    ModifiedAt = DateTime.Now,
+                    isPayable = true,
                 };
 
                 await _db.TenantPayments.AddAsync(payments);
@@ -62,13 +62,13 @@ namespace Capital.Funds.Services
             {
                 LastException = null;
                 var payment = await _db.TenantPayments.FirstOrDefaultAsync(p => p.Id==paymentId);
-                if(payment != null)
+                if (payment != null)
                 {
-                     _db.TenantPayments.Remove(payment);
-                     int row = await _db.SaveChangesAsync();
+                    _db.TenantPayments.Remove(payment);
+                    int row = await _db.SaveChangesAsync();
                     if (row>0)
                         return SD.RecordUpdated;
-                      
+
                 }
                 return SD.RecordNotUpdated;
             }
@@ -143,7 +143,7 @@ namespace Capital.Funds.Services
                 LastException = null;
                 var totalCount = await _db.TenantPayments.CountAsync();
                 var details = await _db.TenantPayments
-                    .Where(p=>p.TenantId == TenantId)
+                    .Where(p => p.TenantId == TenantId)
                     .Skip((page - 1) * pageSize)
                     .Take(pageSize)
                     .ToListAsync();

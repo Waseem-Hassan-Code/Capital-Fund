@@ -65,6 +65,34 @@ namespace Capital.Funds.Services
             return null;
         }
 
+        public async Task<bool> DeleteTenantAsync(string Id)
+        {
+            try
+            {
+                LastException = null;
+
+                var tenant = await _db.Users.FindAsync(Id);
+
+                if (tenant != null)
+                {
+                    _db.Users.Remove(tenant);
+                    await _db.SaveChangesAsync();
+
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                LastException = ex.Message;
+            }
+            return false;
+        }
+
+
         public async Task<PaginatedResult<TenantPersonalInfoDto>> getAllTenantsAsync(int page , int pageSize)
         {
             try

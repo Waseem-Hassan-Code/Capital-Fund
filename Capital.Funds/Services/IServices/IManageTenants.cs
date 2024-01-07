@@ -9,5 +9,6 @@ namespace Capital.Funds.Services.IServices
         Task<PaginatedResult<TenantPersonalInfoDto>> getAllTenantsAsync(int page, int pageSize);
         Task <string> updateTenantsPersonalInfoAsync(TenantPersonalInfoDto personalInfo);
         Task <string> addNewTenantAsync(Users user);
+        Task<bool> DeleteTenantAsync(string Id);
     }
 }

@@ -112,6 +112,7 @@ namespace Capital.Funds.EndPoints
             return Results.Ok(responseDto);
         }
 
+
         [Authorize(Policy = "AdminOnly")]
         public async static Task<IResult> updatePayment(ITenantPayments _pay, [FromBody] TenantPayments payments)
         {

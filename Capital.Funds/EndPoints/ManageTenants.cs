@@ -24,6 +24,11 @@ namespace Capital.Funds.EndPoints
                 .Produces<ResponseDto>(200)
                 .Produces(400);
 
+            app.MapGet("/api/deleteTenantInfo", deleteTenantInfo)
+               .WithName("DeleteTenantInfo")
+               .Produces<ResponseDto>(200)
+               .Produces(400);
+
         }
 
         [Authorize(Policy = "AdminOnly")]
@@ -113,6 +118,32 @@ namespace Capital.Funds.EndPoints
             responseDto.StatusCode = 200;
             responseDto.Results = tenantsList;
             responseDto.Message = "Record retrived successfully.";
+            return Results.Ok(responseDto);
+        }
+
+        [Authorize(Policy = "AdminOnly")]
+        public async static Task<IResult> deleteTenantInfo(IManageTenants _manage, [FromQuery] string Id)
+        {
+            ResponseDto responseDto = new() { IsSuccess = false, StatusCode = 400, Message = "", Results = { } };
+
+            bool check = await _manage.DeleteTenantAsync(Id);
+            if (check == false)
+            {
+                responseDto.Message = "Record not deleted.";
+                return Results.BadRequest(responseDto);
+            }
+
+            if (!string.IsNullOrEmpty(_manage.LastException))
+            {
+                responseDto.StatusCode = 500;
+                responseDto.Message = "Internal Server Error: " + _manage.LastException;
+                return Results.BadRequest(responseDto);
+            }
+
+            responseDto.IsSuccess = true;
+            responseDto.StatusCode = 200;
+            responseDto.Results = check;
+            responseDto.Message = SD.RecordUpdated;
             return Results.Ok(responseDto);
         }
     }
