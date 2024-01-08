@@ -190,7 +190,7 @@ namespace Capital.Funds.Services
                     if(checkUser.OTP == emailVerificationDto.Otp)
                     {
                         checkUser.isEmailVerified = true;
-                        checkUser.OTP = null;
+                        checkUser.OTP = "";
                         await _db.SaveChangesAsync();
                         return SD.EmailVerified;
                     }
