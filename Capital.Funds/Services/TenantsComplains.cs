@@ -46,9 +46,11 @@ namespace Capital.Funds.Services
         {
             try
             {
+                DateTime date = DateTime.Now;
                 LastException = null;
-                string sqlQuery = $"UPDATE TenantComplaints SET IsFixed = {CompStatus}, SET UpdatedAt = GETDATE() WHERE Id = @ComplainId";
-                int rowsAffected = await _db.Database.ExecuteSqlRawAsync(sqlQuery, new SqliteParameter("@ComplainId", complainId));
+                string sqlQuery = $"UPDATE TenantComplaints SET IsFixed = @status, UpdatedAt = @currentDate WHERE Id = @ComplainId";
+                int rowsAffected = await _db.Database.ExecuteSqlRawAsync(sqlQuery, new SqliteParameter("@ComplainId", complainId),  new SqliteParameter("@status", CompStatus),
+                    new SqliteParameter("@currentDate", date));
 
                 if (rowsAffected == 0)
                     return false;
