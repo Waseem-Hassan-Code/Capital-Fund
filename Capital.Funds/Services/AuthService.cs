@@ -43,29 +43,33 @@ namespace Capital.Funds.Services
 
                         if (user.isEmailVerified == false)
                         {
-                            LoginResponseDto loginResponseDto = new LoginResponseDto()
+                            LoginResponseDto response = new LoginResponseDto()
                             {
                                 User = userInfo,
                                 Token = "Email not verified.",
                             };
+                            return response;
                         }
 
                         if(user.IsActive == false)
                         {
-                            LoginResponseDto loginResponseDto = new LoginResponseDto()
+                            LoginResponseDto response = new LoginResponseDto()
                             {
                                 User = userInfo,
                                 Token = "Account inactive.",
                             };
+                            return response;
                         }
 
-                        LoginResponseDto response = new LoginResponseDto
+                        if(user.isEmailVerified==true && user.IsActive==true)
                         {
-                            User = userInfo,
-                            Token = token
-                        };
-
-                        return response;
+                            LoginResponseDto response = new LoginResponseDto
+                            {
+                                User = userInfo,
+                                Token = token
+                            };
+                            return response;
+                        }
                     }
                     else
                     {
