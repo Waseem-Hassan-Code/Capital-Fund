@@ -33,7 +33,7 @@ namespace Capital.Funds.Services
                 Issuer = _jwtOptions.Issuer,
                 Audience = _jwtOptions.Audience,
                 Subject = new ClaimsIdentity(claimList),
-                Expires = DateTime.UtcNow.AddMinutes(15),
+                Expires = DateTime.UtcNow.AddDays(1),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
 
