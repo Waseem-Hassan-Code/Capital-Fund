@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Capital.Funds.Migrations
 {
     [DbContext(typeof(ApplicationDb))]
-    [Migration("20240106101009_fix")]
-    partial class fix
+    [Migration("20240108214327_First_Migration")]
+    partial class First_Migration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -205,15 +205,15 @@ namespace Capital.Funds.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "96bcd345-42d7-4485-ba02-9dda436f475c",
+                            Id = "1e8f8220-2ee8-4241-9647-916482206cb1",
                             Email = "admin@admin.com",
                             Gender = "Male",
                             IsActive = true,
                             Name = "Capital Fund",
                             OTP = "112233",
-                            Password = "AIDTUerVWeC7Li2bVfJ3NttjN91Tm3tp/Vq5j4uRV+k=",
+                            Password = "VUct4jIlYf5wizQWudIuGblzgBNCLgEwGj6CLHH71o4=",
                             Role = "admin",
-                            Salt = "8YFJDNwcRuZUlzTQvUaUPbTCUDVxymOBS5cHjiO91mA=",
+                            Salt = "1CtsbaD8pa2uZqIrrgqd4vfjO8cu84vTtZki2FlIi/U=",
                             isEmailVerified = true
                         });
                 });
