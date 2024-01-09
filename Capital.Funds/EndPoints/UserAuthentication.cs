@@ -27,7 +27,7 @@ namespace Capital.Funds.EndPoints
                 .Produces<ResponseDto>(200)
                 .Produces(400);
 
-            app.MapPost("/api/resendEmail", ResendEmail)
+            app.MapGet("/api/resendEmail", ResendEmail)
                .Produces<ResponseDto>(200)
                .Produces(400);
 
