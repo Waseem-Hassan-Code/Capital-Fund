@@ -28,8 +28,6 @@ namespace Capital.Funds.EndPoints
                 .Produces(400);
 
             app.MapPost("/api/resendEmail", ResendEmail)
-               .WithName("ResendEmail")
-               .Accepts<string>("application/json")
                .Produces<ResponseDto>(200)
                .Produces(400);
 
@@ -119,7 +117,7 @@ namespace Capital.Funds.EndPoints
         }
 
         
-        public async static Task<IResult> ResendEmail(IAuthService _auth, [FromBody] string email)
+        public async static Task<IResult> ResendEmail(IAuthService _auth, [FromQuery] string email)
          {
             ResponseDto responseDto = new() { IsSuccess = false, StatusCode = 400, Message = "", Results = { } };
 
