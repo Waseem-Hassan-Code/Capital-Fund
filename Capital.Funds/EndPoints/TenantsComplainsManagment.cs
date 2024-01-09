@@ -52,11 +52,11 @@ namespace Capital.Funds.EndPoints
             }
 
             [Authorize(Policy = "AdminOnly")]
-            public async static Task<IResult> updateComplain(ITenantsComplains _complains, [FromQuery] string complainId, bool CompStatus)
+            public async static Task<IResult> updateComplain(ITenantsComplains _complains, [FromBody] UpdateComplaintStatusDto updateComplaintStatusDto)
             {
                 ResponseDto responseDto = new() { IsSuccess = false, StatusCode = 400, Message = "", Results = { } };
 
-                bool update = await _complains.ChangeStatusAsync(complainId, CompStatus);
+                bool update = await _complains.ChangeStatusAsync(updateComplaintStatusDto);
                 if (update == false)
                 {
                     responseDto.Message = SD.UserNotFound;

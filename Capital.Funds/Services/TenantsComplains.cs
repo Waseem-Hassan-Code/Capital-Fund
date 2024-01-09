@@ -42,14 +42,15 @@ namespace Capital.Funds.Services
             }
             return false;
         }
-        public async Task<bool> ChangeStatusAsync(string complainId, bool CompStatus)
+        public async Task<bool> ChangeStatusAsync(UpdateComplaintStatusDto updateComplaintStatusDto)
         {
             try
             {
                 DateTime date = DateTime.Now;
                 LastException = null;
                 string sqlQuery = $"UPDATE TenantComplaints SET IsFixed = @status, UpdatedAt = @currentDate WHERE Id = @ComplainId";
-                int rowsAffected = await _db.Database.ExecuteSqlRawAsync(sqlQuery, new SqliteParameter("@ComplainId", complainId),  new SqliteParameter("@status", CompStatus),
+                int rowsAffected = await _db.Database.ExecuteSqlRawAsync(sqlQuery, new SqliteParameter("@ComplainId", updateComplaintStatusDto.Id)
+                    ,  new SqliteParameter("@status", updateComplaintStatusDto.Status),
                     new SqliteParameter("@currentDate", date));
 
                 if (rowsAffected == 0)

@@ -7,7 +7,7 @@ namespace Capital.Funds.Services.IServices
     {
         string LastException { get; }
         Task<PaginatedResult<ComplaintsDTO>> GetTenantsComplainsAsync(int page, int pageSize);
-        Task<bool> ChangeStatusAsync(string complainId, bool CompStatus);
+        Task<bool> ChangeStatusAsync(UpdateComplaintStatusDto updateComplaintStatusDto);
         Task<bool> RemoveComplainAsync(string complainId);
     }
 }
