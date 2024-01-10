@@ -15,14 +15,14 @@ namespace Capital.Funds.Utils
                 {
                     EnableSsl = true,
                     UseDefaultCredentials = false,
-                    Credentials = new NetworkCredential("bman88873@gmail.com", "vjxd kwhl gfqw jfxc")
+                    Credentials = new NetworkCredential("capitalfundllc@gmail.com", "alsd bmrm mlcx fmgo")
                 };
 
                 string OTP = SD.GenerateOtp();
 
                 await client.SendMailAsync(new MailMessage
                 {
-                    From = new MailAddress("bman88873@gmail.com"),
+                    From = new MailAddress("capitalfundllc@gmail.com"),
                     To = { new MailAddress(email) },
                     Subject = subject,
                     Body = GetEmailBody(OTP),
