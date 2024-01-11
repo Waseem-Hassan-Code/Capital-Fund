@@ -41,5 +41,6 @@ namespace Capital.Funds.Database
         public DbSet<TenatDetails> TenatDetails { get; set;}
         public DbSet<TenantPayments> TenantPayments { get; set;}
         public DbSet<PropertyDetails> PropertyDetails { get; set; }
+        public DbSet<ComplaintFiles> ComplaintFiles { get; set; }
     }
 }

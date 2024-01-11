@@ -9,42 +9,61 @@ namespace Capital.Funds.Services
     public class UserEssentials : IUserEssentials
     {
         private readonly ApplicationDb _db;
+        private readonly FileHandling _fileHandling;
         public string LastException { get; private set; }
 
-        public UserEssentials(ApplicationDb db)
+        public UserEssentials(ApplicationDb db, FileHandling fileHandling)
         {
-            _db=db;
+            _db = db;
             LastException = null;
+            _fileHandling = fileHandling;
         }
 
-        public async Task<string> addComplaintAsync(TenantComplaints complaint)
+        public async Task<string> addComplaintAsync(TenantComplaints complaint, IFormFile file)
         {
             try
             {
-                TenantComplaints complaints = new TenantComplaints
+                using (var transaction = await _db.Database.BeginTransactionAsync())
                 {
-                    Id = Guid.NewGuid().ToString("N"),
-                    TenantId = complaint.TenantId,
-                    Title = complaint.Title,
-                    Details = complaint.Details,
-                    IsFixed = false,
-                    CreatedAt = DateTime.Now,
-                    UpdatedAt = DateTime.Now,
-                };
-                await _db.AddAsync(complaints);
-                int count = await _db.SaveChangesAsync();
+                    try
+                    {
+                        TenantComplaints complaints = new TenantComplaints
+                        {
+                            Id = Guid.NewGuid().ToString("N"),
+                            TenantId = complaint.TenantId,
+                            Title = complaint.Title,
+                            Details = complaint.Details,
+                            IsFixed = false,
+                            CreatedAt = DateTime.Now,
+                            UpdatedAt = DateTime.Now,
+                        };
 
-                if (count > 0)
-                {
-                    LastException = null;
-                    return SD.RecordUpdated;
+                        await _db.AddAsync(complaints);
+                        int count = await _db.SaveChangesAsync();
+
+                        if (count > 0)
+                        {
+                            await transaction.CommitAsync();
+                            string ComplaintId = complaints.Id;
+
+                            string fileUpload = await _fileHandling.UploadFileAsync(file, ComplaintId);
+
+                            LastException = null;
+                            return SD.RecordUpdated;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        await transaction.RollbackAsync();
+                        LastException = ex.Message;
+                    }
                 }
-                    
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 LastException = ex.Message;
             }
-            return SD.RecordNotUpdated;
+            return SD.RecordNotUpdated; 
         }
 
         public async Task<IEnumerable<TenantComplaints>> getComplaintsAsync(string tenantId)

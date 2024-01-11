@@ -22,7 +22,7 @@ namespace Capital.Funds.EndPoints
             app.MapGet("/api/getComplaints", getAllComplaints).WithName("GetComplaints")
             .Produces<ResponseDto>(200).Produces(400);
 
-            app.MapPost("/api/newComplaint", addNewComplaint).WithName("NewComplait").Accepts<TenantComplaints>("application/json")
+            app.MapPost("/api/newComplaint", AddNewComplaint).WithName("NewComplait").Accepts<TenantComplaints>("application/json")
             .Produces<ResponseDto>(200).Produces(400);
 
             app.MapGet("/api/getTenantId", getTenantId).WithName("GetTenantId")
@@ -112,12 +112,20 @@ namespace Capital.Funds.EndPoints
         }
 
         [Authorize(Policy = "UserOnly")]
-        public async static Task<IResult> addNewComplaint(IUserEssentials _manage, [FromBody] TenantComplaints compaint)
+        public async static Task<IResult> AddNewComplaint(IUserEssentials _manage, [FromForm] TenantComplaints complaint, IFormFile file)
         {
-            ResponseDto responseDto = new() { IsSuccess = false, StatusCode = 400, Message = "", Results = { } };
+            ResponseDto responseDto = new ResponseDto { IsSuccess = false, StatusCode = 400, Message = "", Results = { } };
 
-            var result = await _manage.addComplaintAsync(compaint);
-            if (result==SD.RecordNotUpdated)
+            if (file == null || file.Length < 1)
+            {
+                responseDto.StatusCode = 400;
+                responseDto.Message = "Image not found";
+                return Results.BadRequest(responseDto);
+            }
+
+            var result = await _manage.addComplaintAsync(complaint, file);
+
+            if (result == SD.RecordNotUpdated)
             {
                 responseDto.StatusCode = 400;
                 responseDto.Message = "Data not found";
@@ -137,6 +145,7 @@ namespace Capital.Funds.EndPoints
             responseDto.Message = SD.RecordUpdated;
             return Results.Ok(responseDto);
         }
+
 
         public async static Task<IResult> getTenantId(IUserEssentials _manage, [FromQuery] string userId)
         {

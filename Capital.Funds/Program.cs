@@ -4,9 +4,7 @@ using Capital.Funds.Models;
 using Capital.Funds.Services;
 using Capital.Funds.Services.IServices;
 using Capital.Funds.Utils;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 
@@ -28,6 +26,7 @@ builder.Services.AddScoped<ITenantsComplains, TenantsComplains>();
 builder.Services.AddScoped<IUserEssentials,UserEssentials>();
 builder.Services.AddAutoMapper(typeof(MappingConfig));
 builder.Services.AddScoped<IDropDownLists, DropDownLists>();
+builder.Services.AddScoped<FileHandling>();
 builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddSwaggerGen(option =>

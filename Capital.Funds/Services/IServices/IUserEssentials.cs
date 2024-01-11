@@ -8,7 +8,7 @@ namespace Capital.Funds.Services.IServices
         Task<string> getTenantIdAsync(string userId);
         Task<TenantPayments> getMontlyRentAsync(string userId);
         Task<IEnumerable<TenantComplaints>> getComplaintsAsync(string tenantId);
-        Task<string> addComplaintAsync(TenantComplaints complaint);
+        Task<string> addComplaintAsync(TenantComplaints complaint, IFormFile file);
         Task<PaginatedResult<TenantPayments>> getPaymentsHistoryAsync(string tenantId, int page, int pageSize);
     }
 }
