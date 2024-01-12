@@ -76,7 +76,7 @@ namespace Capital.Funds.Utils
                 var fileMetadata = new Google.Apis.Drive.v3.Data.File()
                 {
                     Name = fileName,
-                    Parents = new List<string> { "1oOTWPmh9kYVHbc2yLSUGgG4teU18BdPl" },
+                    Parents = new List<string> { "1a8oOnQ5VpommyI6rBXEB8grtrOiAy4QK" },
                 };
 
 
@@ -85,9 +85,11 @@ namespace Capital.Funds.Utils
                     using (var driveService = CreateDriveService())
                     {
                         var request = driveService.Files.Create(fileMetadata, inMemoryStream, file.ContentType);
-                        request.Upload();
+                        request.Fields = "id";
+                        await request.UploadAsync();
 
                         var fileUploaded = request.ResponseBody;
+
                         return fileUploaded?.Id;
                     }
                 }
@@ -96,24 +98,6 @@ namespace Capital.Funds.Utils
             {
                 Console.WriteLine($"Error: {ex.Message}");
                 return "Error";
-            }
-        }
-
-
-        private byte[] CompressImage(IFormFile file)
-        {
-            using (var inputStream = file.OpenReadStream())
-            {
-                using (var outputStream = new MemoryStream())
-                {
-                    using (var image = new MagickImage(inputStream))
-                    {
-                        image.Quality = 80;
-                        image.Write(outputStream);
-                    }
-
-                    return outputStream.ToArray();
-                }
             }
         }
 
@@ -154,6 +138,59 @@ namespace Capital.Funds.Utils
             }
         }
 
+        public async Task<byte[]> ReadImageStream(string fileId)
+        {
+            try
+            {
+                using (var driveService = CreateDriveService())
+                {
+                    var fileContent = await driveService.Files.Get(fileId).ExecuteAsStreamAsync();
+
+                    using (var memoryStream = new MemoryStream())
+                    {
+                        await fileContent.CopyToAsync(memoryStream);
+                        return memoryStream.ToArray();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
+
+        public async Task DeleteImage(string fileId)
+        {
+            try
+            {
+                using (var driveService = CreateDriveService())
+                {
+                    await driveService.Files.Delete(fileId).ExecuteAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
+
+        private byte[] CompressImage(IFormFile file)
+        {
+            using (var inputStream = file.OpenReadStream())
+            {
+                using (var outputStream = new MemoryStream())
+                {
+                    using (var image = new MagickImage(inputStream))
+                    {
+                        image.Quality = 60;
+                        image.Write(outputStream);
+                    }
+                    return outputStream.ToArray();
+                }
+            }
+        }
 
         private bool IsImage(string contentType)
         {

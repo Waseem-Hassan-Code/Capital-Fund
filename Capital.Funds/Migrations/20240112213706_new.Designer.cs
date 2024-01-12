@@ -11,14 +11,36 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Capital.Funds.Migrations
 {
     [DbContext(typeof(ApplicationDb))]
-    [Migration("20240108214327_First_Migration")]
-    partial class First_Migration
+    [Migration("20240112213706_new")]
+    partial class @new
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.0");
+
+            modelBuilder.Entity("Capital.Funds.Models.ComplaintFiles", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ComplaintId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("FileName")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("FileURL")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ComplaintFiles");
+                });
 
             modelBuilder.Entity("Capital.Funds.Models.PropertyDetails", b =>
                 {
@@ -150,6 +172,9 @@ namespace Capital.Funds.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<int>("RentPerMonth")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("UserId")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -205,15 +230,15 @@ namespace Capital.Funds.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "1e8f8220-2ee8-4241-9647-916482206cb1",
+                            Id = "8121365e-0b3b-45f0-a16a-bd912be90643",
                             Email = "admin@admin.com",
                             Gender = "Male",
                             IsActive = true,
                             Name = "Capital Fund",
                             OTP = "112233",
-                            Password = "VUct4jIlYf5wizQWudIuGblzgBNCLgEwGj6CLHH71o4=",
+                            Password = "1Rw+D3Kmf6QCpBavIT26+akCJD0MXkSihQkddgBSasA=",
                             Role = "admin",
-                            Salt = "1CtsbaD8pa2uZqIrrgqd4vfjO8cu84vTtZki2FlIi/U=",
+                            Salt = "CgatqjfJ0rbzEmWwN4AMHzbSzYFH/FQQCsFwrKxeDbs=",
                             isEmailVerified = true
                         });
                 });

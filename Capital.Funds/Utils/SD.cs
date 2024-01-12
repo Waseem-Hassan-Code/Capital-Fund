@@ -1,4 +1,5 @@
-﻿using Microsoft.JSInterop;
+﻿using Microsoft.AspNetCore.StaticFiles;
+using Microsoft.JSInterop;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Cryptography;
 
@@ -22,10 +23,19 @@ namespace Capital.Funds.Utils
         public static string RecordNotUpdated = "Failed to update record.";
 
         public static string googleDriveAPIKey = Path.Combine(Directory.GetCurrentDirectory(),"GoogleApiKey", "TenantStorage.json");
-
         public static string GoogleDriveFolderId = "1oOTWPmh9kYVHbc2yLSUGgG4teU18BdPl";
         public static string client_email = "test-498@focused-outlook-411011.iam.gserviceaccount.com";
 
+
+        public static string GetContentTypeDynamic(string fileExtension)
+        {
+            var provider = new FileExtensionContentTypeProvider();
+            if (!provider.TryGetContentType($"file.{fileExtension}", out var contentType))
+            {
+                contentType = "application/octet-stream";
+            }
+            return contentType;
+        }
 
         private const int OtpLength = 6;
         private static readonly Random random = new Random();

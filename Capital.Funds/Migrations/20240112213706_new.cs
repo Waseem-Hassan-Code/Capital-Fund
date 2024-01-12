@@ -6,11 +6,25 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Capital.Funds.Migrations
 {
     /// <inheritdoc />
-    public partial class First_Migration : Migration
+    public partial class @new : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "ComplaintFiles",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "TEXT", nullable: false),
+                    ComplaintId = table.Column<string>(type: "TEXT", nullable: false),
+                    FileName = table.Column<string>(type: "TEXT", nullable: false),
+                    FileURL = table.Column<string>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ComplaintFiles", x => x.Id);
+                });
+
             migrationBuilder.CreateTable(
                 name: "PropertyDetails",
                 columns: table => new
@@ -77,7 +91,8 @@ namespace Capital.Funds.Migrations
                     UserId = table.Column<string>(type: "TEXT", nullable: false),
                     PropertyId = table.Column<string>(type: "TEXT", nullable: false),
                     MovedIn = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    MovedOut = table.Column<string>(type: "TEXT", nullable: false)
+                    MovedOut = table.Column<string>(type: "TEXT", nullable: false),
+                    RentPerMonth = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -107,12 +122,15 @@ namespace Capital.Funds.Migrations
             migrationBuilder.InsertData(
                 table: "Users",
                 columns: new[] { "Id", "Email", "Gender", "IsActive", "Name", "OTP", "Password", "Role", "Salt", "isEmailVerified" },
-                values: new object[] { "1e8f8220-2ee8-4241-9647-916482206cb1", "admin@admin.com", "Male", true, "Capital Fund", "112233", "VUct4jIlYf5wizQWudIuGblzgBNCLgEwGj6CLHH71o4=", "admin", "1CtsbaD8pa2uZqIrrgqd4vfjO8cu84vTtZki2FlIi/U=", true });
+                values: new object[] { "8121365e-0b3b-45f0-a16a-bd912be90643", "admin@admin.com", "Male", true, "Capital Fund", "112233", "1Rw+D3Kmf6QCpBavIT26+akCJD0MXkSihQkddgBSasA=", "admin", "CgatqjfJ0rbzEmWwN4AMHzbSzYFH/FQQCsFwrKxeDbs=", true });
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "ComplaintFiles");
+
             migrationBuilder.DropTable(
                 name: "PropertyDetails");
 

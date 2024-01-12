@@ -227,15 +227,15 @@ namespace Capital.Funds.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "9b0bb2fb-bdb5-4271-86ec-5375141cc0c1",
+                            Id = "8121365e-0b3b-45f0-a16a-bd912be90643",
                             Email = "admin@admin.com",
                             Gender = "Male",
                             IsActive = true,
                             Name = "Capital Fund",
                             OTP = "112233",
-                            Password = "52UymH5M8YdHNSYRx/8t2NvgdJ/qR5RAbZHdlDfpgAE=",
+                            Password = "1Rw+D3Kmf6QCpBavIT26+akCJD0MXkSihQkddgBSasA=",
                             Role = "admin",
-                            Salt = "VPPGyZ3Q10Z0S5siELcdtbs8B9egCvAR8LWPWENAwvU=",
+                            Salt = "CgatqjfJ0rbzEmWwN4AMHzbSzYFH/FQQCsFwrKxeDbs=",
                             isEmailVerified = true
                         });
                 });

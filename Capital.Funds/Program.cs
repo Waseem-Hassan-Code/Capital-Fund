@@ -4,9 +4,6 @@ using Capital.Funds.Models;
 using Capital.Funds.Services;
 using Capital.Funds.Services.IServices;
 using Capital.Funds.Utils;
-using Google.Apis.Auth.OAuth2;
-using Google.Apis.Drive.v3;
-using Google.Apis.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
@@ -30,6 +27,7 @@ builder.Services.AddScoped<IUserEssentials,UserEssentials>();
 builder.Services.AddAutoMapper(typeof(MappingConfig));
 builder.Services.AddScoped<IDropDownLists, DropDownLists>();
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddScoped<FileHandling>();
 
 //builder.Services.AddSingleton<DriveService>(provider =>
 //{

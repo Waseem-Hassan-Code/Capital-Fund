@@ -70,22 +70,33 @@ namespace Capital.Funds.Services
             return SD.RecordNotUpdated; 
         }
 
-        public async Task<IEnumerable<TenantComplaints>> getComplaintsAsync(string tenantId)
+        public async Task<PaginatedResult<TenantComplaints>> getComplaintsAsync(string tenantId, int page , int pageSize)
         {
             try
             {
                 var tenant = await _db.TenatDetails.FirstOrDefaultAsync(t=>t.UserId == tenantId);
-                IEnumerable<TenantComplaints> complaints = await _db.TenantComplaints
+                var results = await _db.TenantComplaints
                     .Where(t => t.TenantId == tenant.Id)
                     .OrderByDescending(t => t.CreatedAt)
+                    .Skip(page - 1)
+                    .Take(pageSize)
                     .ToListAsync();
 
-                if (complaints != null)
+                int totalCount = results.Count;
+                if (results.Any())
                 {
+                    IEnumerable<TenantComplaints> list = results;
+                    PaginatedResult<TenantComplaints> paginatedResult = new PaginatedResult<TenantComplaints>
+                    {
+                        Items = list,
+                        TotalCount = totalCount,
+                        Page = page,
+                        PageSize = pageSize
+                    };
                     LastException = null;
-                    return complaints;
+                    return paginatedResult;
                 }
-                    
+
             }
             catch(Exception ex)
             {

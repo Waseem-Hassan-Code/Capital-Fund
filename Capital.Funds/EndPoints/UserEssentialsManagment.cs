@@ -85,12 +85,12 @@ namespace Capital.Funds.EndPoints
         }
 
         [Authorize(Policy = "UserOnly")]
-        public async static Task<IResult> getAllComplaints(IUserEssentials _manage, [FromQuery] string userId)
+        public async static Task<IResult> getAllComplaints(IUserEssentials _manage, [FromQuery] string userId, [FromQuery] int page, [FromQuery] int pageSize)
         {
             ResponseDto responseDto = new() { IsSuccess = false, StatusCode = 400, Message = "", Results = { } };
 
-            IEnumerable<TenantComplaints> result = await _manage.getComplaintsAsync(userId);
-            if (result==null)
+            var result = await _manage.getComplaintsAsync(userId,page,pageSize);
+            if (result.TotalCount==0)
             {
                 responseDto.StatusCode = 203;
                 responseDto.Message = "Data not found";

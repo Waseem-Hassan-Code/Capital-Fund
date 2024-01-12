@@ -3,6 +3,7 @@ using Capital.Funds.Database;
 using Capital.Funds.Models;
 using Capital.Funds.Models.DTO;
 using Capital.Funds.Services.IServices;
+using Capital.Funds.Utils;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
@@ -14,13 +15,15 @@ namespace Capital.Funds.Services
     {
         private readonly ApplicationDb _db;
         private readonly IMapper _mapper;
+        private readonly FileHandling _fileHandling;
         public string LastException { get; private set; }
 
-        public TenantsComplains(ApplicationDb db, IMapper mapper)
+        public TenantsComplains(ApplicationDb db, IMapper mapper, FileHandling fileHandling)
         {
             _db = db;
             _mapper = mapper;
             LastException = null;
+            _fileHandling = fileHandling;
         }
 
         public async Task<bool> RemoveComplainAsync(string complainId)
@@ -33,6 +36,10 @@ namespace Capital.Funds.Services
 
                 if (rowsAffected == 0)
                     return false;
+
+                string fileId = await _db.ComplaintFiles.Select(u => u.FileURL).Where(c => complainId==complainId).FirstOrDefaultAsync();
+                await _fileHandling.DeleteImage(fileId);
+
                 return true;
 
             }
@@ -116,5 +123,37 @@ namespace Capital.Funds.Services
             }
             return null;
         }
+
+        public async Task<byte[]> GetUserComplaintImageAsync(string complaintId)
+        {
+            try
+            {
+                LastException = null;
+
+                var file = await _db.ComplaintFiles.FirstOrDefaultAsync(f => f.ComplaintId == complaintId);
+
+                if (file != null)
+                {
+                    string fileId = file.FileURL;
+                    var readStream = await _fileHandling.ReadImageStream(fileId);
+                    if (readStream == null)
+                    {
+                        LastException =  "An error occured while reading file stream.";
+                    }
+                    return readStream;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            catch (Exception ex)
+            {
+                LastException = ex.Message;
+            }
+            return null;
+        }
+
+
     }
 }
