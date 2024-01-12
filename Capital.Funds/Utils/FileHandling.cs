@@ -1,11 +1,9 @@
 ﻿using Capital.Funds.Database;
 using Capital.Funds.Models;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using System;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
+using Google.Apis.Auth.OAuth2;
+using Google.Apis.Drive.v3;
+using ImageMagick;
+using System.Net;
 
 namespace Capital.Funds.Utils
 {
@@ -13,6 +11,8 @@ namespace Capital.Funds.Utils
     {
         private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly ApplicationDb _db;
+        private DriveService _driveService;
+        public static string googleDriveAPIKey = Path.Combine("GoogleApiKey", "Key.json");
 
         public FileHandling(IWebHostEnvironment webHostEnvironment, ApplicationDb db)
         {
@@ -20,7 +20,7 @@ namespace Capital.Funds.Utils
             _db = db;
         }
 
-        public async Task<string> UploadFileAsync(IFormFile file, string complaintId)
+        public async Task<string> UploadFileToDriveAsync(IFormFile file, string complaintId)
         {
             try
             {
@@ -34,15 +34,14 @@ namespace Capital.Funds.Utils
                     return "Invalid file format. Only image files are allowed.";
                 }
 
-                string randomFileName = Guid.NewGuid().ToString("N")+file.FileName;
+                string randomFileName = Guid.NewGuid().ToString("N") + file.FileName;
                 string fileExtension = Path.GetExtension(file.FileName);
-                string baseFolder = "Attachments";
-                string relativePath = Path.Combine(baseFolder, $"{randomFileName}{fileExtension}");
-                var filePath = Path.Combine(Directory.GetCurrentDirectory(), relativePath);
 
-                using (var stream = new FileStream(filePath, FileMode.Create))
+                string fileId = await UploadFileToGoogleDrive(file, randomFileName, fileExtension);
+
+                if (string.IsNullOrEmpty(fileId))
                 {
-                    await file.CopyToAsync(stream);
+                    return "Failed to upload file to Google Drive";
                 }
 
                 var complaintFiles = new ComplaintFiles
@@ -50,9 +49,8 @@ namespace Capital.Funds.Utils
                     Id = Guid.NewGuid().ToString("N"),
                     ComplaintId = complaintId,
                     FileName = randomFileName,
-                    FileURL = relativePath, 
+                    FileURL = fileId,
                 };
-
                 await _db.ComplaintFiles.AddAsync(complaintFiles);
                 int count = await _db.SaveChangesAsync();
 
@@ -65,12 +63,96 @@ namespace Capital.Funds.Utils
             }
             catch (Exception ex)
             {
-                return $"Error uploading file: {ex.Message}";
+                return "Error";
+            }
+        }
+
+        private async Task<string> UploadFileToGoogleDrive(IFormFile file, string fileName, string fileExtension)
+        {
+            try
+            {
+                byte[] compressedData = CompressImage(file);
+
+                var fileMetadata = new Google.Apis.Drive.v3.Data.File()
+                {
+                    Name = fileName,
+                    Parents = new List<string> { "1oOTWPmh9kYVHbc2yLSUGgG4teU18BdPl" },
+                };
+
+
+                using (var inMemoryStream = new MemoryStream(compressedData))
+                {
+                    using (var driveService = CreateDriveService())
+                    {
+                        var request = driveService.Files.Create(fileMetadata, inMemoryStream, file.ContentType);
+                        request.Upload();
+
+                        var fileUploaded = request.ResponseBody;
+                        return fileUploaded?.Id;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+                return "Error";
             }
         }
 
 
+        private byte[] CompressImage(IFormFile file)
+        {
+            using (var inputStream = file.OpenReadStream())
+            {
+                using (var outputStream = new MemoryStream())
+                {
+                    using (var image = new MagickImage(inputStream))
+                    {
+                        image.Quality = 80;
+                        image.Write(outputStream);
+                    }
 
+                    return outputStream.ToArray();
+                }
+            }
+        }
+
+        private DriveService CreateDriveService()
+        {
+            GoogleCredential credential;
+
+            try
+            {
+                var keyFilePath = Path.Combine(Directory.GetCurrentDirectory(), "GoogleApiKey", "Key.json");
+
+                if (!File.Exists(keyFilePath))
+                {
+                    return null;
+                }
+
+                var fileContent = File.ReadAllText(keyFilePath);
+                using (var stream = new FileStream(keyFilePath, FileMode.Open, FileAccess.Read))
+                {
+                    credential = GoogleCredential.FromStream(stream)
+                        .CreateScoped(DriveService.ScopeConstants.Drive);
+                }
+
+                Google.Apis.Util.Store.FileDataStore logger = new Google.Apis.Util.Store.FileDataStore("Google.Apis.Requests.RequestsResponse");
+
+                _driveService = new DriveService(new Google.Apis.Services.BaseClientService.Initializer()
+                {
+                    HttpClientInitializer = credential,
+                    ApplicationName = "Tenant Complaints",
+                });
+
+                return _driveService;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error creating DriveService: {ex.Message}");
+                throw; 
+            }
+        }
 
 
         private bool IsImage(string contentType)

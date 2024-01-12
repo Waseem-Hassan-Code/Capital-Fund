@@ -4,6 +4,9 @@ using Capital.Funds.Models;
 using Capital.Funds.Services;
 using Capital.Funds.Services.IServices;
 using Capital.Funds.Utils;
+using Google.Apis.Auth.OAuth2;
+using Google.Apis.Drive.v3;
+using Google.Apis.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
@@ -26,8 +29,27 @@ builder.Services.AddScoped<ITenantsComplains, TenantsComplains>();
 builder.Services.AddScoped<IUserEssentials,UserEssentials>();
 builder.Services.AddAutoMapper(typeof(MappingConfig));
 builder.Services.AddScoped<IDropDownLists, DropDownLists>();
-builder.Services.AddScoped<FileHandling>();
 builder.Services.AddEndpointsApiExplorer();
+
+//builder.Services.AddSingleton<DriveService>(provider =>
+//{
+//    string credentialsPath = SD.googleDriveAPIKey;
+//    GoogleCredential credential;
+//    using (var stream = new FileStream(credentialsPath, FileMode.Open, FileAccess.Read))
+//    {
+//        credential = GoogleCredential.FromStream(stream)
+//            .CreateScoped(DriveService.ScopeConstants.Drive);
+//    }
+//    var service = new DriveService(new BaseClientService.Initializer()
+//    {
+//        HttpClientInitializer = credential,
+//        ApplicationName = "Tenants Record",
+//    });
+//    return service;
+//});
+
+builder.Services.AddScoped<FileHandling>(); 
+
 
 builder.Services.AddSwaggerGen(option =>
 {

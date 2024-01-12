@@ -8,9 +8,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="GoogleDrive\**" />
+    <Content Remove="GoogleDrive\**" />
+    <EmbeddedResource Remove="GoogleDrive\**" />
+    <None Remove="GoogleDrive\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoMapper" Version="12.0.1" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
+    <PackageReference Include="Google.Apis.Drive.v3" Version="1.65.0.3256" />
     <PackageReference Include="JWT" Version="10.1.1" />
+    <PackageReference Include="Magick.NET-Q16-AnyCPU" Version="13.5.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.0" />
@@ -20,7 +29,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
-    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.0.3" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.2.0" />
   </ItemGroup>
 
 </Project>

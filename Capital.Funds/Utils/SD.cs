@@ -21,6 +21,11 @@ namespace Capital.Funds.Utils
         public static string RecordUpdated = "Record updated successfully.";
         public static string RecordNotUpdated = "Failed to update record.";
 
+        public static string googleDriveAPIKey = Path.Combine(Directory.GetCurrentDirectory(),"GoogleApiKey", "TenantStorage.json");
+
+        public static string GoogleDriveFolderId = "1oOTWPmh9kYVHbc2yLSUGgG4teU18BdPl";
+        public static string client_email = "test-498@focused-outlook-411011.iam.gserviceaccount.com";
+
 
         private const int OtpLength = 6;
         private static readonly Random random = new Random();
@@ -31,9 +36,6 @@ namespace Capital.Funds.Utils
             int otp = random.Next(minValue, maxValue);
             return otp.ToString($"D{OtpLength}");
         }
-
-
-
 
         public static string GenerateSalt()
         {

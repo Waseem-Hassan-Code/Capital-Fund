@@ -7,6 +7,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Backend", "Backend", "{8344
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Capital.Funds", "Capital.Funds\Capital.Funds.csproj", "{F25F34F6-9379-435E-9DBA-60DA6DDF85BF}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NewFolder1", "NewFolder1", "{ACD7554F-06E1-4E16-BE5F-55BCF3BFF0BC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,6 +25,7 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{F25F34F6-9379-435E-9DBA-60DA6DDF85BF} = {834493CA-3027-4631-8325-069C7D3831AF}
+		{ACD7554F-06E1-4E16-BE5F-55BCF3BFF0BC} = {834493CA-3027-4631-8325-069C7D3831AF}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8052A61C-2842-44C5-93FE-2D3EBCB840C6}
