@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Capital.Funds.Utils
@@ -13,9 +14,10 @@ namespace Capital.Funds.Utils
         private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly ApplicationDb _db;
 
-        public FileHandling(IWebHostEnvironment webHostEnvironment)
+        public FileHandling(IWebHostEnvironment webHostEnvironment, ApplicationDb db)
         {
             _webHostEnvironment = webHostEnvironment;
+            _db = db;
         }
 
         public async Task<string> UploadFileAsync(IFormFile file, string complaintId)
@@ -27,41 +29,60 @@ namespace Capital.Funds.Utils
                     return "File is empty";
                 }
 
-                var attachmentsFolder = Path.Combine(_webHostEnvironment.ContentRootPath, "Attachments");
-                if (!Directory.Exists(attachmentsFolder))
+                if (!IsImage(file.ContentType))
                 {
-                    Directory.CreateDirectory(attachmentsFolder);
+                    return "Invalid file format. Only image files are allowed.";
                 }
-                string randomFileName = Guid.NewGuid().ToString("N");
+
+                string randomFileName = Guid.NewGuid().ToString("N")+file.FileName;
                 string fileExtension = Path.GetExtension(file.FileName);
-                var filePath = Path.Combine(attachmentsFolder, $"{randomFileName}{fileExtension}");
+                string baseFolder = "Attachments";
+                string relativePath = Path.Combine(baseFolder, $"{randomFileName}{fileExtension}");
+                var filePath = Path.Combine(Directory.GetCurrentDirectory(), relativePath);
 
                 using (var stream = new FileStream(filePath, FileMode.Create))
                 {
-                    var complaintFiles = new ComplaintFiles
-                    {
-                        Id = Guid.NewGuid().ToString("N"),
-                        ComplaintId = complaintId,
-                        FileName = randomFileName,
-                        FileURL = filePath,
-                    };
+                    await file.CopyToAsync(stream);
+                }
 
-                    await _db.ComplaintFiles.AddAsync(complaintFiles);
+                var complaintFiles = new ComplaintFiles
+                {
+                    Id = Guid.NewGuid().ToString("N"),
+                    ComplaintId = complaintId,
+                    FileName = randomFileName,
+                    FileURL = relativePath, 
+                };
 
-                    int count = await _db.SaveChangesAsync();
-                    if(count > 0)
-                    {
-                        await file.CopyToAsync(stream);
-                    }
+                await _db.ComplaintFiles.AddAsync(complaintFiles);
+                int count = await _db.SaveChangesAsync();
+
+                if (count > 0)
+                {
                     return "File uploaded successfully";
                 }
 
-                return "File not uploaded"; 
+                return "File not uploaded";
             }
             catch (Exception ex)
             {
                 return $"Error uploading file: {ex.Message}";
             }
+        }
+
+
+
+
+
+        private bool IsImage(string contentType)
+        {
+            if (string.IsNullOrEmpty(contentType))
+            {
+                return false;
+            }
+
+            string[] allowedImageTypes = { "image/jpeg", "image/png", "image/gif", "image/bmp", "image/tiff", "image/webp" };
+
+            return allowedImageTypes.Contains(contentType.ToLower());
         }
     }
 }

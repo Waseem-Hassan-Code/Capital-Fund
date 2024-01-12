@@ -22,8 +22,8 @@ namespace Capital.Funds.EndPoints
             app.MapGet("/api/getComplaints", getAllComplaints).WithName("GetComplaints")
             .Produces<ResponseDto>(200).Produces(400);
 
-            app.MapPost("/api/newComplaint", AddNewComplaint).WithName("NewComplait").Accepts<TenantComplaints>("application/json")
-            .Produces<ResponseDto>(200).Produces(400);
+            app.MapPost("/api/newComplaint", AddNewComplaint).WithName("NewComplaint")
+                .Produces<ResponseDto>(200).Produces(400).DisableAntiforgery(); ;
 
             app.MapGet("/api/getTenantId", getTenantId).WithName("GetTenantId")
              .Produces<ResponseDto>(200).Produces(400);
@@ -111,12 +111,13 @@ namespace Capital.Funds.EndPoints
             return Results.Ok(responseDto);
         }
 
+
         [Authorize(Policy = "UserOnly")]
-        public async static Task<IResult> AddNewComplaint(IUserEssentials _manage, [FromForm] TenantComplaints complaint, IFormFile file)
+        public async static Task<IResult> AddNewComplaint(IUserEssentials _manage, [FromForm] TenantComplaints complaint, [FromForm] IFormFile file)
         {
             ResponseDto responseDto = new ResponseDto { IsSuccess = false, StatusCode = 400, Message = "", Results = { } };
 
-            if (file == null || file.Length < 1)
+            if (file == null || file.Length == 0)
             {
                 responseDto.StatusCode = 400;
                 responseDto.Message = "Image not found";
@@ -145,6 +146,7 @@ namespace Capital.Funds.EndPoints
             responseDto.Message = SD.RecordUpdated;
             return Results.Ok(responseDto);
         }
+
 
 
         public async static Task<IResult> getTenantId(IUserEssentials _manage, [FromQuery] string userId)

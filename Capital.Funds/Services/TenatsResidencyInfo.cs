@@ -31,7 +31,8 @@ namespace Capital.Funds.Services
                     UserId = TenatDetails.UserId,
                     PropertyId = TenatDetails.PropertyId,
                     MovedIn = TenatDetails.MovedIn,
-                    MovedOut = ""
+                    MovedOut = "",
+                    RentPerMonth = TenatDetails.RentPerMonth,
                 };
 
                 await _db.TenatDetails.AddAsync(newTenant);
@@ -90,6 +91,7 @@ namespace Capital.Funds.Services
                         PropertyName = prop.PropertyName,
                         MovedIn = residence.MovedIn,
                         MovedOut = residence.MovedOut,
+                        RentPerMonth = residence.RentPerMonth,
                     })
                     .Skip((page - 1) * pageSize)
                     .Take(pageSize)

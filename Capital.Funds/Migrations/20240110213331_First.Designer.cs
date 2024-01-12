@@ -3,6 +3,7 @@ using System;
 using Capital.Funds.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,34 +11,14 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Capital.Funds.Migrations
 {
     [DbContext(typeof(ApplicationDb))]
-    partial class ApplicationDbModelSnapshot : ModelSnapshot
+    [Migration("20240110213331_First")]
+    partial class First
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.0");
-
-            modelBuilder.Entity("Capital.Funds.Models.ComplaintFiles", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("ComplaintId")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("FileName")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("FileURL")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ComplaintFiles");
-                });
 
             modelBuilder.Entity("Capital.Funds.Models.PropertyDetails", b =>
                 {
@@ -169,9 +150,6 @@ namespace Capital.Funds.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("RentPerMonth")
-                        .HasColumnType("INTEGER");
-
                     b.Property<string>("UserId")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -227,15 +205,15 @@ namespace Capital.Funds.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "9b0bb2fb-bdb5-4271-86ec-5375141cc0c1",
+                            Id = "2cade040-2547-4d5d-9490-9f94dba14bd5",
                             Email = "admin@admin.com",
                             Gender = "Male",
                             IsActive = true,
                             Name = "Capital Fund",
                             OTP = "112233",
-                            Password = "52UymH5M8YdHNSYRx/8t2NvgdJ/qR5RAbZHdlDfpgAE=",
+                            Password = "FdBTS1x4IBH9hGvh8zlAlKGq7RS6a9+TYWt5sZJ3YoE=",
                             Role = "admin",
-                            Salt = "VPPGyZ3Q10Z0S5siELcdtbs8B9egCvAR8LWPWENAwvU=",
+                            Salt = "W5xFiEz4RIhCE05MTREyfS8LZmFYk5wusH8n3nXaW30=",
                             isEmailVerified = true
                         });
                 });

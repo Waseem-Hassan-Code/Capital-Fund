@@ -90,6 +90,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 app.UseCors("AllowAll");
+
 app.ConfigureAuthEndpoints();
 app.ConfigureManageBuildingsEndPoints();
 app.ConfigureManageEmployeeEndPoints();
@@ -99,5 +100,6 @@ app.ConfigureUserEssentialsEndPoints();
 app.ConfigureComplainsEndPoints();
 app.ConfigureDropDownsEndPoints();
 app.UseHttpsRedirection();
+
 
 app.Run();

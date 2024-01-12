@@ -7,5 +7,6 @@
         public string PropertyName { get; set; }
         public DateTime MovedIn {  get; set; }
         public string MovedOut { get; set; }
+        public int RentPerMonth { get; set; }
     }
 }
