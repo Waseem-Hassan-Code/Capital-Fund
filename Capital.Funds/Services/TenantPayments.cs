@@ -106,7 +106,7 @@ namespace Capital.Funds.Services
                               .Take(pageSize)
                               .ToListAsync();
 
-                if (details!=null)
+                if (details.Count > 0)
                 {
                     //IEnumerable<Models.TenantPayments> paymentList = _mapper.Map<IEnumerable<Models.TenantPayments>>(details);
                     var paginatedResults = new PaginatedResult<TenantPaymentsDto>

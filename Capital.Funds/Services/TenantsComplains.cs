@@ -124,7 +124,7 @@ namespace Capital.Funds.Services
             return null;
         }
 
-        public async Task<byte[]> GetUserComplaintImageAsync(string complaintId)
+        public async Task<Stream> GetUserComplaintImageAsync(string complaintId)
         {
             try
             {
@@ -135,12 +135,7 @@ namespace Capital.Funds.Services
                 if (file != null)
                 {
                     string fileId = file.FileURL;
-                    var readStream = await _fileHandling.ReadImageStream(fileId);
-                    if (readStream == null)
-                    {
-                        LastException =  "An error occured while reading file stream.";
-                    }
-                    return readStream;
+                    return await _fileHandling.ReadImageStream(fileId);
                 }
                 else
                 {
@@ -150,9 +145,10 @@ namespace Capital.Funds.Services
             catch (Exception ex)
             {
                 LastException = ex.Message;
+                return null;
             }
-            return null;
         }
+
 
 
     }

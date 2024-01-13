@@ -113,8 +113,8 @@ namespace Capital.Funds.EndPoints
         {
             ResponseDto responseDto = new() { IsSuccess = false, StatusCode = 400, Message = "", Results = { } };
 
-            byte[] stream = await _complains.GetUserComplaintImageAsync(complaintId);
-            if (stream.IsNullOrEmpty())
+            Stream stream = await _complains.GetUserComplaintImageAsync(complaintId);
+            if (stream == null)
             {
                 responseDto.Message = "Image not found.";
                 return Results.BadRequest(responseDto);
@@ -129,7 +129,7 @@ namespace Capital.Funds.EndPoints
 
             var fileExtension = ".jpg";
             var contentType = SD.GetContentTypeDynamic(fileExtension);
-            FileContentResult file = new FileContentResult(stream, contentType);
+            FileStreamResult file = new FileStreamResult(stream, contentType);
 
             responseDto.Results = file;
             responseDto.IsSuccess = true;
@@ -138,6 +138,7 @@ namespace Capital.Funds.EndPoints
 
             return Results.Ok(responseDto);
         }
+
 
 
     }
