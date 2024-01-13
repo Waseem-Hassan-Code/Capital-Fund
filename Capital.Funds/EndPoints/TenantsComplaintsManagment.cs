@@ -24,9 +24,6 @@ namespace Capital.Funds.EndPoints
                 .WithName("GetAllComplains")
                 .Produces<ResponseDto>(200)
                 .Produces(400);
-
-            app.MapGet("api/getComplaintImage", GetComplaintImage).WithName("GetComplaintImage")
-                .Produces<ResponseDto>(200).Produces(400);
         }
 
         [Authorize(Policy = "AdminOnly")]
@@ -106,40 +103,5 @@ namespace Capital.Funds.EndPoints
             responseDto.Message = "Record retrived successfully.";
             return Results.Ok(responseDto);
         }
-
-
-        [Authorize(Policy = "AdminOnly")]
-        public async static Task<IResult> GetComplaintImage(ITenantsComplains _complains, [FromQuery] string complaintId)
-        {
-            ResponseDto responseDto = new() { IsSuccess = false, StatusCode = 400, Message = "", Results = { } };
-
-            Stream stream = await _complains.GetUserComplaintImageAsync(complaintId);
-            if (stream == null)
-            {
-                responseDto.Message = "Image not found.";
-                return Results.BadRequest(responseDto);
-            }
-
-            if (!string.IsNullOrEmpty(_complains.LastException))
-            {
-                responseDto.StatusCode = 500;
-                responseDto.Message = "Internal Server Error: " + _complains.LastException;
-                return Results.BadRequest(responseDto);
-            }
-
-            var fileExtension = ".jpg";
-            var contentType = SD.GetContentTypeDynamic(fileExtension);
-            FileStreamResult file = new FileStreamResult(stream, contentType);
-
-            responseDto.Results = file;
-            responseDto.IsSuccess = true;
-            responseDto.StatusCode = 200;
-            responseDto.Message = "Image retrieved successfully.";
-
-            return Results.Ok(responseDto);
-        }
-
-
-
     }
 }

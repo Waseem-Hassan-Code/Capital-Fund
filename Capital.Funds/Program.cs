@@ -144,6 +144,7 @@ app.ConfigureTenantsPaymentsInfo();
 app.ConfigureUserEssentialsEndPoints();
 app.ConfigureComplainsEndPoints();
 app.ConfigureDropDownsEndPoints();
+app.ConfigureStreamsEndPoints();
 app.UseHttpsRedirection();
 
 

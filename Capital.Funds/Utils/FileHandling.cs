@@ -138,14 +138,19 @@ namespace Capital.Funds.Utils
             }
         }
 
-        public async Task<Stream> ReadImageStream(string fileId)
+        public async Task<byte[]> ReadImageStream(string fileId)
         {
             try
             {
                 using (var driveService = CreateDriveService())
                 {
                     var fileContent = await driveService.Files.Get(fileId).ExecuteAsStreamAsync();
-                    return fileContent;
+
+                    using (var memoryStream = new MemoryStream())
+                    {
+                        await fileContent.CopyToAsync(memoryStream);
+                        return memoryStream.ToArray();
+                    }
                 }
             }
             catch (Exception ex)
