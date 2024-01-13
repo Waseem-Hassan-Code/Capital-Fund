@@ -34,7 +34,7 @@ namespace Capital.Funds.Services
                     AreaMaintainienceFee = tenantPayments.AreaMaintainienceFee,
                     isLate = tenantPayments.isLate,
                     LateFee = tenantPayments.LateFee,
-                    RentPayedAt = tenantPayments.RentPayedAt,
+                    RentPayedAt = "",
                     Month = tenantPayments.Month,
                     CreatedAt = DateTime.Now,
                     ModifiedAt = DateTime.Now,
