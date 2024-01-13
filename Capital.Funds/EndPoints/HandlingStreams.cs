@@ -40,7 +40,10 @@ namespace Capital.Funds.EndPoints
 
             var fileExtension = ".jpg";
             var contentType = SD.GetContentTypeDynamic(fileExtension);
-            FileContentResult file = new FileContentResult(stream, contentType);
+            FileContentResult file = new FileContentResult(stream, contentType)
+            {
+                FileDownloadName = $"ComplainId_{Guid.NewGuid()}"
+            };
 
             responseDto.Results = file;
             responseDto.IsSuccess = true;
