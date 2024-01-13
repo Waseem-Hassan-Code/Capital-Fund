@@ -1,12 +1,14 @@
 using Capital.Funds.Database;
 using Capital.Funds.EndPoints;
 using Capital.Funds.Models;
+using Capital.Funds.ScheduledJobs;
 using Capital.Funds.Services;
 using Capital.Funds.Services.IServices;
 using Capital.Funds.Utils;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using Quartz;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,6 +30,29 @@ builder.Services.AddAutoMapper(typeof(MappingConfig));
 builder.Services.AddScoped<IDropDownLists, DropDownLists>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddScoped<FileHandling>();
+
+builder.Services.AddQuartz(options =>
+{
+    options.UseMicrosoftDependencyInjectionJobFactory();
+
+    var jobKeyMonthlyPayments = JobKey.Create(nameof(TriggerPayments) + "_MonthlyPayments");
+    options.AddJob<TriggerPayments>(jobKeyMonthlyPayments)
+        .AddTrigger(trigger => trigger.ForJob(jobKeyMonthlyPayments)
+            .WithCronSchedule("0 0 4 1 * ?"));
+
+    var jobKeyLateFee = JobKey.Create(nameof(TriggerPayments) + "_LateFee");
+    options.AddJob<TriggerPayments>(jobKeyLateFee)
+        .AddTrigger(trigger => trigger.ForJob(jobKeyLateFee)
+            .WithCronSchedule("0 0 11 1 * ?"));
+
+    //var jobKeyTest = JobKey.Create(nameof(TriggerPayments) + "_Test");
+    //options.AddJob<TriggerPayments>(jobKeyTest)
+    //    .AddTrigger(trigger => trigger.ForJob(jobKeyTest)
+    //        .WithCronSchedule("0/5 * * ? * *"));
+});
+
+builder.Services.AddQuartzHostedService();
+
 
 //builder.Services.AddSingleton<DriveService>(provider =>
 //{

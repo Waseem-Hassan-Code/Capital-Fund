@@ -87,24 +87,24 @@ namespace Capital.Funds.Services
                 var totalCount = await _db.TenantPayments.CountAsync();
 
                 var details = await (
-    from payment in _db.TenantPayments
-    join tenant in _db.TenatDetails on payment.TenantId equals tenant.Id
-    join user in _db.Users on tenant.UserId equals user.Id
-    select new TenantPaymentsDto
-    {
-        Id = payment.Id,
-        TenantName = user.Name,
-        Rent = payment.Rent,
-        AreaMaintainienceFee = payment.AreaMaintainienceFee,
-        isLate = payment.isLate,
-        LateFee = payment.LateFee,
-        RentPayedAt = payment.RentPayedAt,
-        Month = payment.Month,
-        isPayable = payment.isPayable
-    })
-    .Skip((page - 1) * pageSize)
-    .Take(pageSize)
-    .ToListAsync();
+                     from payment in _db.TenantPayments
+                     join tenant in _db.TenatDetails on payment.TenantId equals tenant.Id
+                     join user in _db.Users on tenant.UserId equals user.Id
+                         select new TenantPaymentsDto
+                          {
+                           Id = payment.Id,
+                           TenantName = user.Name,
+                           Rent = payment.Rent,
+                           AreaMaintainienceFee = payment.AreaMaintainienceFee,
+                           isLate = payment.isLate,
+                           LateFee = payment.LateFee,
+                           RentPayedAt = payment.RentPayedAt,
+                           Month = payment.Month,
+                           isPayable = payment.isPayable
+                           })
+                              .Skip((page - 1) * pageSize)
+                              .Take(pageSize)
+                              .ToListAsync();
 
                 if (details!=null)
                 {

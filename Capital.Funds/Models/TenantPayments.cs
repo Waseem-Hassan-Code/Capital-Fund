@@ -12,7 +12,7 @@ namespace Capital.Funds.Models
         public decimal AreaMaintainienceFee { get; set; }
         public bool isLate { get; set; }
         public decimal LateFee {  get; set; }
-        public DateTime RentPayedAt {  get; set; }
+        public string RentPayedAt {  get; set; }
         public string Month {  get; set; }
         [JsonIgnore]
         public DateTime CreatedAt { get; set; } = DateTime.Now;

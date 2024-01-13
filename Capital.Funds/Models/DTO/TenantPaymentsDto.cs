@@ -8,7 +8,7 @@
         public decimal AreaMaintainienceFee { get; set; }
         public bool isLate { get; set; }
         public decimal LateFee { get; set; }
-        public DateTime RentPayedAt { get; set; }
+        public string RentPayedAt { get; set; }
         public string Month { get; set; }
         public bool isPayable { get; set; }
     }
