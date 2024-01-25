@@ -184,6 +184,11 @@ namespace Capital.Funds.Services
             {
                 LastException = null;
 
+                if (tenantPayments.RentPayedAt==""||tenantPayments.RentPayedAt==null)
+                {
+                    tenantPayments.RentPayedAt = "";
+                }
+
                 Models.TenantPayments existingPayment = await _db.TenantPayments.FindAsync(tenantPayments.Id);
 
                 if (existingPayment != null)

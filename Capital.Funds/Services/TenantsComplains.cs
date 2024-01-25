@@ -31,23 +31,50 @@ namespace Capital.Funds.Services
             try
             {
                 LastException = null;
-                string sqlQuery = $"DELETE FROM TenantComplaints WHERE Id = @ComplainId";
-                int rowsAffected = await _db.Database.ExecuteSqlRawAsync(sqlQuery, new SqliteParameter("@ComplainId", complainId));
 
-                if (rowsAffected == 0)
-                    return false;
+                using (var transaction = _db.Database.BeginTransaction())
+                {
+                    try
+                    {
+                        LastException = null;
+                        string sqlQuery = $"DELETE FROM TenantComplaints WHERE Id = @ComplainId";
+                        int rowsAffected = await _db.Database.ExecuteSqlRawAsync(sqlQuery, new SqliteParameter("@ComplainId", complainId));
 
-                string fileId = await _db.ComplaintFiles.Select(u => u.FileURL).Where(c => complainId==complainId).FirstOrDefaultAsync();
-                await _fileHandling.DeleteImage(fileId);
+                        if (rowsAffected == 0)
+                            return false;
 
-                return true;
+                        string fileId = await _db.ComplaintFiles
+                            .Where(c => c.ComplaintId == complainId)
+                            .Select(u => u.FileURL)
+                            .FirstOrDefaultAsync();
 
+                        bool task = await _fileHandling.DeleteImage(fileId);
+
+                        if (task)
+                        {
+                            transaction.Commit();
+                            return true;
+                        }
+                        else
+                        {
+                            transaction.Rollback();
+                            return false;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Error during transaction: {ex.Message}");
+                        transaction.Rollback();
+                        return false;
+                    }
+                }
             }
             catch (Exception ex)
             {
-                LastException = ex.Message;
+                Console.WriteLine($"Error outside transaction: {ex.Message}");
+                return false;
             }
-            return false;
+
         }
         public async Task<bool> ChangeStatusAsync(UpdateComplaintStatusDto updateComplaintStatusDto)
         {
@@ -123,7 +150,7 @@ namespace Capital.Funds.Services
             }
             return null;
         }
-        public async Task<byte[]> GetUserComplaintImageAsync(string complaintId)
+        public async Task<string> GetUserComplaintImageAsync(string complaintId)
         {
             try
             {
@@ -134,16 +161,12 @@ namespace Capital.Funds.Services
                 if (file != null)
                 {
                     string fileId = file.FileURL;
-                    var readStream = await _fileHandling.ReadImageStream(fileId);
-                    if (readStream == null)
+                    var readStream = await _fileHandling.GetFileLink(fileId);
+                    if (readStream == null || readStream == "")
                     {
                         LastException =  "An error occured while reading file stream.";
                     }
                     return readStream;
-                }
-                else
-                {
-                    return null;
                 }
             }
             catch (Exception ex)
@@ -152,8 +175,6 @@ namespace Capital.Funds.Services
             }
             return null;
         }
-
-
 
     }
 }

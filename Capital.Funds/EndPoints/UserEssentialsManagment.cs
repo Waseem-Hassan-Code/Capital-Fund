@@ -90,7 +90,7 @@ namespace Capital.Funds.EndPoints
             ResponseDto responseDto = new() { IsSuccess = false, StatusCode = 400, Message = "", Results = { } };
 
             var result = await _manage.getComplaintsAsync(userId,page,pageSize);
-            if (result.TotalCount==0)
+            if ( result == null || result.TotalCount == 0)
             {
                 responseDto.StatusCode = 203;
                 responseDto.Message = "Data not found";

@@ -2,6 +2,7 @@
 using Capital.Funds.Models;
 using Google.Apis.Auth.OAuth2;
 using Google.Apis.Drive.v3;
+using Google.Apis.Drive.v3.Data;
 using ImageMagick;
 using System.Net;
 
@@ -109,12 +110,12 @@ namespace Capital.Funds.Utils
             {
                 var keyFilePath = Path.Combine(Directory.GetCurrentDirectory(), "GoogleApiKey", "Key.json");
 
-                if (!File.Exists(keyFilePath))
+                if (!System.IO.File.Exists(keyFilePath))
                 {
                     return null;
                 }
 
-                var fileContent = File.ReadAllText(keyFilePath);
+                var fileContent = System.IO.File.ReadAllText(keyFilePath);
                 using (var stream = new FileStream(keyFilePath, FileMode.Open, FileAccess.Read))
                 {
                     credential = GoogleCredential.FromStream(stream)
@@ -134,44 +135,133 @@ namespace Capital.Funds.Utils
             catch (Exception ex)
             {
                 Console.WriteLine($"Error creating DriveService: {ex.Message}");
-                throw; 
-            }
-        }
-
-        public async Task<byte[]> ReadImageStream(string fileId)
-        {
-            try
-            {
-                using (var driveService = CreateDriveService())
-                {
-                    var fileContent = await driveService.Files.Get(fileId).ExecuteAsStreamAsync();
-
-                    using (var memoryStream = new MemoryStream())
-                    {
-                        await fileContent.CopyToAsync(memoryStream);
-                        return memoryStream.ToArray();
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
                 throw;
             }
         }
 
 
-        public async Task DeleteImage(string fileId)
+
+        public void AssignOwnerRole(string fileId, string serviceAccountEmail)
+    {
+        try
+        {
+            var driveService = CreateDriveService();
+
+            var permission = new Permission
+            {
+                Type = "serviceAccount",
+                Role = "owner",
+                EmailAddress = serviceAccountEmail
+            };
+
+            driveService.Permissions.Create(permission, fileId).Execute();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error assigning owner role: {ex.Message}");
+            throw;
+        }
+    }
+        public async Task<Stream> ReadImageStream(string fileId)
+        {
+            Stream memoryStream = null;
+            try
+            {
+                var driveService = CreateDriveService();
+                var request = driveService.Files.Get(fileId);
+                var file = await request.ExecuteAsync();
+
+                if (file != null)
+                {
+                    if (file.Size != null)
+                    {
+                        var downloadUrl = file.WebContentLink;
+
+                        using (var httpClient = new HttpClient())
+                        {
+                            var response = await httpClient.GetAsync(downloadUrl);
+
+                            if (response.IsSuccessStatusCode)
+                            {
+                                memoryStream = new MemoryStream();
+                                await response.Content.CopyToAsync(memoryStream);
+                                memoryStream.Seek(0, SeekOrigin.Begin);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("File size is null.");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in ReadImageStream: {ex.Message}");
+                memoryStream?.Dispose();
+                throw;
+            }
+
+            return memoryStream;
+
+        }
+
+        public async Task<string> GetFileLink(string fileId)
+        {
+            try
+            {
+                var driveService = CreateDriveService();
+
+                var permissionsRequest = driveService.Permissions.List(fileId);
+                var permissions = await permissionsRequest.ExecuteAsync();
+
+                var authenticatedUserEmail = "tenantsstorage@tenantsstorage.iam.gserviceaccount.com";
+                AssignOwnerRole(fileId, authenticatedUserEmail);
+                var hasPermission = permissions.Permissions.Any(p => p.EmailAddress == authenticatedUserEmail);
+
+                if (!hasPermission)
+                {
+                    Console.WriteLine("User does not have permission to access the file.");
+                    return null;
+                }
+
+                var request = driveService.Files.Get(fileId);
+                var file = await request.ExecuteAsync();
+
+                if (file != null)
+                {
+                    Console.WriteLine($"File ID: {file.Id}");
+                    Console.WriteLine($"WebContentLink: {file.WebContentLink}");
+
+                    return file.WebContentLink;
+                }
+                else
+                {
+                    Console.WriteLine("File not found.");
+                    return null;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in GetFileLink: {ex.Message}");
+                throw;
+            }
+        }
+
+
+        public async Task<bool> DeleteImage(string fileId)
         {
             try
             {
                 using (var driveService = CreateDriveService())
                 {
                     await driveService.Files.Delete(fileId).ExecuteAsync();
+                    return true;
                 }
             }
             catch (Exception ex)
             {
-                throw;
+                return false;
             }
         }
 

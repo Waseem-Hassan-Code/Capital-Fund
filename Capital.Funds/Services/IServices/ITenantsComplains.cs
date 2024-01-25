@@ -9,6 +9,6 @@ namespace Capital.Funds.Services.IServices
         Task<PaginatedResult<ComplaintsDTO>> GetTenantsComplainsAsync(int page, int pageSize);
         Task<bool> ChangeStatusAsync(UpdateComplaintStatusDto updateComplaintStatusDto);
         Task<bool> RemoveComplainAsync(string complainId);
-        Task<byte[]> GetUserComplaintImageAsync(string complaintId);
+        Task<string> GetUserComplaintImageAsync(string complaintId);
     }
 }
