@@ -14,7 +14,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<ApplicationDb>(options =>
 {
-    options.UseSqlite($"Data Source={AppDomain.CurrentDomain.BaseDirectory}{SD.DatabaseName};BindTo=AnyHost");
+    options.UseSqlite($"Data Source={AppDomain.CurrentDomain.BaseDirectory}{SD.DatabaseName}");
 });
 
 
@@ -149,4 +149,4 @@ app.ConfigureStreamsEndPoints();
 app.UseHttpsRedirection();
 
 
-app.Run();
+app.Run("http://+:5181");
