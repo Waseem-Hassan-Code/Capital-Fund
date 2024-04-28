@@ -150,31 +150,47 @@ namespace Capital.Funds.Services
             }
             return null;
         }
-        public async Task<string> GetUserComplaintImageAsync(string complaintId)
+
+        public async Task<ComplaintFiles> FileDetails(string complaintId)
         {
             try
             {
-                LastException = null;
-
-                var file = await _db.ComplaintFiles.FirstOrDefaultAsync(f => f.ComplaintId == complaintId);
-
-                if (file != null)
-                {
-                    string fileId = file.FileURL;
-                    var readStream = await _fileHandling.GetFileLink(fileId);
-                    if (readStream == null || readStream == "")
-                    {
-                        LastException =  "An error occured while reading file stream.";
-                    }
-                    return readStream;
-                }
+                return await _db.ComplaintFiles.FirstOrDefaultAsync(f=>f.ComplaintId == complaintId);
             }
             catch (Exception ex)
             {
-                LastException = ex.Message;
+                throw new Exception("An error occurred while retrieving the complaint image.", ex);
             }
-            return null;
         }
+        public async Task<Stream> GetUserComplaintImageAsync(string complaintId)
+        {
+            try
+            {
+                var file = await _db.ComplaintFiles.FirstOrDefaultAsync(f => f.ComplaintId == complaintId);
+
+                if (file == null)
+                {
+                    throw new FileNotFoundException("Complaint file not found.");
+                }
+
+                var fileId = file.Id;
+                var readStream = await _fileHandling.GetFileAsStreamAsync(fileId);
+
+                if (readStream == null)
+                {
+                    throw new IOException("Failed to read file stream.");
+                }
+
+                return readStream;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("An error occurred while retrieving the complaint image.", ex);
+            }
+        }
+
+
+
 
     }
 }

@@ -4,6 +4,7 @@ using Google.Apis.Auth.OAuth2;
 using Google.Apis.Drive.v3;
 using Google.Apis.Drive.v3.Data;
 using ImageMagick;
+using Microsoft.EntityFrameworkCore;
 using System.Net;
 
 namespace Capital.Funds.Utils
@@ -21,37 +22,37 @@ namespace Capital.Funds.Utils
             _db = db;
         }
 
-        public async Task<string> UploadFileToDriveAsync(IFormFile file, string complaintId)
+        public async Task<string> UploadFileAsync(IFormFile fileStream, string ComplaintId)
         {
             try
             {
-                if (file == null || file.Length == 0)
+                // Create the folder if it doesn't exist
+                var folderPath = Path.Combine(Directory.GetCurrentDirectory(), "ImageFiles");
+                if (!Directory.Exists(folderPath))
                 {
-                    return "File is empty";
+                    Directory.CreateDirectory(folderPath);
+                    Console.WriteLine("Folder 'ImageFiles' created.");
                 }
 
-                if (!IsImage(file.ContentType))
+                // Generate a unique file name
+                var randomFileName = Guid.NewGuid().ToString("N") + Path.GetExtension(fileStream.FileName);
+                var targetFilePath = Path.Combine(folderPath, randomFileName);
+
+                // Save the file to the target file path
+                using (var fileOutput = System.IO.File.Create(targetFilePath))
                 {
-                    return "Invalid file format. Only image files are allowed.";
+                    await fileStream.CopyToAsync(fileOutput);
                 }
 
-                string randomFileName = Guid.NewGuid().ToString("N") + file.FileName;
-                string fileExtension = Path.GetExtension(file.FileName);
-
-                string fileId = await UploadFileToGoogleDrive(file, randomFileName, fileExtension);
-
-                if (string.IsNullOrEmpty(fileId))
-                {
-                    return "Failed to upload file to Google Drive";
-                }
-
+                // Save file information to the database
                 var complaintFiles = new ComplaintFiles
                 {
                     Id = Guid.NewGuid().ToString("N"),
-                    ComplaintId = complaintId,
+                    ComplaintId = ComplaintId,
                     FileName = randomFileName,
-                    FileURL = fileId,
+                    FileURL = targetFilePath, 
                 };
+
                 await _db.ComplaintFiles.AddAsync(complaintFiles);
                 int count = await _db.SaveChangesAsync();
 
@@ -59,14 +60,94 @@ namespace Capital.Funds.Utils
                 {
                     return "File uploaded successfully";
                 }
-
-                return "File not uploaded";
+                else
+                {
+                    return "Failed to save file information to the database";
+                }
             }
             catch (Exception ex)
             {
-                return "Error";
+                Console.WriteLine($"Error uploading file: {ex.Message}");
+                return "File upload failed";
             }
         }
+
+
+        public async Task<Stream> GetFileAsStreamAsync(string fileId)
+        {
+            try
+            {
+                var file = await _db.ComplaintFiles.FirstOrDefaultAsync(f => f.Id == fileId);
+
+                if (file == null)
+                {
+                    throw new FileNotFoundException("File not found in database.");
+                }
+
+                var filePath = file.FileURL;
+                if (!System.IO.File.Exists(filePath))
+                {
+                    throw new FileNotFoundException("File path does not exist.");
+                }
+
+                return new FileStream(filePath, FileMode.Open, FileAccess.Read);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error retrieving file: {ex.Message}");
+                throw new IOException("Error retrieving file.", ex);
+            }
+        }
+
+
+
+
+        //public async Task<string> UploadFileToDriveAsync(IFormFile file, string complaintId)
+        //    {
+        //        try
+        //        {
+        //            if (file == null || file.Length == 0)
+        //            {
+        //                return "File is empty";
+        //            }
+
+        //            if (!IsImage(file.ContentType))
+        //            {
+        //                return "Invalid file format. Only image files are allowed.";
+        //            }
+
+        //            string randomFileName = Guid.NewGuid().ToString("N") + file.FileName;
+        //            string fileExtension = Path.GetExtension(file.FileName);
+
+        //            string fileId = await UploadFileToGoogleDrive(file, randomFileName, fileExtension);
+
+        //            if (string.IsNullOrEmpty(fileId))
+        //            {
+        //                return "Failed to upload file to Google Drive";
+        //            }
+
+        //            var complaintFiles = new ComplaintFiles
+        //            {
+        //                Id = Guid.NewGuid().ToString("N"),
+        //                ComplaintId = complaintId,
+        //                FileName = randomFileName,
+        //                FileURL = fileId,
+        //            };
+        //            await _db.ComplaintFiles.AddAsync(complaintFiles);
+        //            int count = await _db.SaveChangesAsync();
+
+        //            if (count > 0)
+        //            {
+        //                return "File uploaded successfully";
+        //            }
+
+        //            return "File not uploaded";
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            return "Error";
+        //        }
+        //    }
 
         private async Task<string> UploadFileToGoogleDrive(IFormFile file, string fileName, string fileExtension)
         {
@@ -206,47 +287,47 @@ namespace Capital.Funds.Utils
 
         }
 
-        public async Task<string> GetFileLink(string fileId)
-        {
-            try
-            {
-                var driveService = CreateDriveService();
+        //public async Task<string> GetFileLink(string fileId)
+        //{
+        //    try
+        //    {
+        //        var driveService = CreateDriveService();
 
-                var permissionsRequest = driveService.Permissions.List(fileId);
-                var permissions = await permissionsRequest.ExecuteAsync();
+        //        var permissionsRequest = driveService.Permissions.List(fileId);
+        //        var permissions = await permissionsRequest.ExecuteAsync();
 
-                var authenticatedUserEmail = "tenantsstorage@tenantsstorage.iam.gserviceaccount.com";
-                AssignOwnerRole(fileId, authenticatedUserEmail);
-                var hasPermission = permissions.Permissions.Any(p => p.EmailAddress == authenticatedUserEmail);
+        //        var authenticatedUserEmail = "tenantsstorage@tenantsstorage.iam.gserviceaccount.com";
+        //        AssignOwnerRole(fileId, authenticatedUserEmail);
+        //        var hasPermission = permissions.Permissions.Any(p => p.EmailAddress == authenticatedUserEmail);
 
-                if (!hasPermission)
-                {
-                    Console.WriteLine("User does not have permission to access the file.");
-                    return null;
-                }
+        //        if (!hasPermission)
+        //        {
+        //            Console.WriteLine("User does not have permission to access the file.");
+        //            return null;
+        //        }
 
-                var request = driveService.Files.Get(fileId);
-                var file = await request.ExecuteAsync();
+        //        var request = driveService.Files.Get(fileId);
+        //        var file = await request.ExecuteAsync();
 
-                if (file != null)
-                {
-                    Console.WriteLine($"File ID: {file.Id}");
-                    Console.WriteLine($"WebContentLink: {file.WebContentLink}");
+        //        if (file != null)
+        //        {
+        //            Console.WriteLine($"File ID: {file.Id}");
+        //            Console.WriteLine($"WebContentLink: {file.WebContentLink}");
 
-                    return file.WebContentLink;
-                }
-                else
-                {
-                    Console.WriteLine("File not found.");
-                    return null;
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error in GetFileLink: {ex.Message}");
-                throw;
-            }
-        }
+        //            return file.WebContentLink;
+        //        }
+        //        else
+        //        {
+        //            Console.WriteLine("File not found.");
+        //            return null;
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Console.WriteLine($"Error in GetFileLink: {ex.Message}");
+        //        throw;
+        //    }
+        //}
 
 
         public async Task<bool> DeleteImage(string fileId)

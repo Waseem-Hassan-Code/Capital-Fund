@@ -20,9 +20,10 @@ namespace Capital.Funds.EndPoints
             endpoints.MapGet("api/getComplaintImage", GetComplaintImage)
                 .RequireAuthorization("AdminOnly")
                 .WithName("GetComplaintImage")
-                .Produces<FileContentResult>(StatusCodes.Status200OK)
+                .Produces(StatusCodes.Status200OK, typeof(Stream))
                 .Produces(StatusCodes.Status404NotFound)
                 .Produces(StatusCodes.Status400BadRequest);
+
         }
 
         public static async Task<IResult> GetComplaintImage(
@@ -31,33 +32,39 @@ namespace Capital.Funds.EndPoints
         {
             try
             {
-                ResponseDto responseDto = new() { IsSuccess = false, StatusCode = 400, Message = "", Results = { } };
-                string stream = await _complains.GetUserComplaintImageAsync(complaintId);
+                var fileStream = await _complains.GetUserComplaintImageAsync(complaintId);
 
-               
-                if (stream == null)
+                if (fileStream == null)
                 {
-                    responseDto.Results = stream;
-                    return Results.NotFound(responseDto);
+                    return Results.NotFound("File not found");
                 }
 
-                if (_complains.LastException != null)
+                var fileName = "default_filename.jpg"; 
+
+                var fileDetails = await _complains.FileDetails(complaintId);
+
+                if (fileStream != null)
                 {
-                    responseDto.StatusCode = 500;
-                    responseDto.Message = "Internal Server Error.";
-                    return Results.BadRequest(responseDto);
+                    fileName = fileDetails.FileName; 
                 }
 
-                responseDto.IsSuccess=true;
-                responseDto.StatusCode = 200;
-                responseDto.Message = "Image retrived.";
-                responseDto.Results = stream;
-                return Results.Ok(responseDto);
+                var contentType = ContentTypeHelper.GetContentType(fileName);
+
+                return Results.File(fileStream, contentType, fileName); 
+            }
+            catch (FileNotFoundException ex)
+            {
+                return Results.NotFound(ex.Message);
+            }
+            catch (IOException ex)
+            {
+                return Results.BadRequest("Error reading file stream: " + ex.Message);
             }
             catch (Exception ex)
             {
                 return Results.BadRequest("Internal Server Error: " + ex.Message);
             }
         }
+
     }
 }

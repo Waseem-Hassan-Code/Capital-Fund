@@ -46,8 +46,8 @@ namespace Capital.Funds.Services
                             await transaction.CommitAsync();
                             string ComplaintId = complaints.Id;
 
-                            string fileUpload = await _fileHandling.UploadFileToDriveAsync(file, ComplaintId);
-                            if(fileUpload== "Failed to upload file to Google Drive"||fileUpload=="Error"||fileUpload== "File not uploaded") 
+                            string fileUpload = await _fileHandling.UploadFileAsync(file, ComplaintId);
+                            if(fileUpload== "Failed to save file information to the database" || fileUpload=="Error"||fileUpload== "File not uploaded") 
                             {
                                 throw new Exception();
                             }
