@@ -14,8 +14,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<ApplicationDb>(options =>
 {
-    options.UseSqlite($"Data source={AppDomain.CurrentDomain.BaseDirectory}{SD.DatabaseName}");
+    options.UseSqlite($"Data Source={AppDomain.CurrentDomain.BaseDirectory}{SD.DatabaseName}");
 });
+
 
 builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection("ApiSettings:JwtOptions"));
 builder.Services.AddScoped<IAuthService, AuthService>();
